@@ -1,26 +1,11 @@
 /*
- * Copyright © 2020, Simplexion, Hungary
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
 
 package zakadabar.template.frontend.templateentity
 
-import zakadabar.stack.data.entity.EntityDto
-import zakadabar.stack.frontend.FrontendContext
-import zakadabar.stack.frontend.builtin.desktop.messages.EntityChildrenLoaded
+import zakadabar.stack.data.entity.EntityRecordDto
 import zakadabar.stack.frontend.builtin.icon.Icons
 import zakadabar.stack.frontend.builtin.navigator.EntityNavigator
 import zakadabar.stack.frontend.builtin.navigator.NewEntity
@@ -47,13 +32,13 @@ class NewTemplateEntity(newEntity: NewEntity) : NewEntityItemWithName(newEntity)
 
     }
 
-    override suspend fun create(parentDto: EntityDto?, name: String) {
+    override suspend fun create(parentDto: EntityRecordDto?, name: String) {
 
         val parentId = parentDto?.id
 
         val entityDto = TemplateEntityDto(
             id = 0,
-            entityDto = EntityDto.new(parentId, TemplateEntityDto.type, name),
+            entityRecord = EntityRecordDto.new(parentId, TemplateEntityDto.type, name),
             name = "name",
             templateField1 = "value1",
             templateField2 = "value2"
@@ -61,7 +46,6 @@ class NewTemplateEntity(newEntity: NewEntity) : NewEntityItemWithName(newEntity)
 
         launch {
             entityDto.create()
-            FrontendContext.dispatcher.postSync { EntityChildrenLoaded(parentId) }
         }
 
     }

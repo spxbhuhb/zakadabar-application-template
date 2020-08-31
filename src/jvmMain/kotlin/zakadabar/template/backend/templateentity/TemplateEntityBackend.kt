@@ -1,9 +1,5 @@
 /*
- * Copyright © 2020, Simplexion, Hungary. All rights reserved.
- *
- * This source code contains proprietary information; it is provided under a license agreement
- * containing restrictions on use and distribution and are also protected by copyright, patent, and 
- * other intellectual and industrial property laws.
+ * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
 package zakadabar.template.backend.templateentity
@@ -46,7 +42,7 @@ object TemplateEntityBackend : EntityRestBackend<TemplateEntityDto> {
             .map {
                 TemplateEntityDto(
                     id = it[EntityTable.id].value,
-                    entityDto = null,
+                    entityRecord = null,
                     name = it[EntityTable.name],
                     templateField1 = it[TemplateEntityTable.templateField1],
                     templateField2 = it[TemplateEntityTable.templateField2],
@@ -56,7 +52,7 @@ object TemplateEntityBackend : EntityRestBackend<TemplateEntityDto> {
 
     override fun create(executor: Executor, dto: TemplateEntityDto) = transaction {
 
-        val entityDto = dto.entityDto?.requireType(TemplateEntityDto.type) ?: throw IllegalArgumentException()
+        val entityDto = dto.entityRecord?.requireType(TemplateEntityDto.type) ?: throw IllegalArgumentException()
         val entityDao = EntityDao.create(executor, entityDto) // performs authorization
 
         val dao = TemplateEntityDao.new(entityDao.id.value) {
@@ -69,7 +65,7 @@ object TemplateEntityBackend : EntityRestBackend<TemplateEntityDto> {
 
     override fun update(executor: Executor, dto: TemplateEntityDto) = transaction {
 
-        val entityDto = dto.entityDto?.requireId(dto.id) ?: throw IllegalArgumentException()
+        val entityDto = dto.entityRecord?.requireId(dto.id) ?: throw IllegalArgumentException()
         val entityDao = EntityDao.update(executor, entityDto) // performs authorization
 
         val dao = TemplateEntityDao[dto.id]

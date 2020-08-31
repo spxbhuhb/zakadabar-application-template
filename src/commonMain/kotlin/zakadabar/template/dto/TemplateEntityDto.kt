@@ -5,7 +5,7 @@ package zakadabar.template.dto
 
 import kotlinx.serialization.Serializable
 import zakadabar.stack.data.entity.DtoWithEntityCompanion
-import zakadabar.stack.data.entity.EntityDto
+import zakadabar.stack.data.entity.EntityRecordDto
 import zakadabar.stack.data.schema.DtoSchema
 import zakadabar.stack.extend.DtoWithEntityContract
 import zakadabar.template.Template
@@ -14,7 +14,7 @@ import zakadabar.template.Template
 data class TemplateEntityDto(
 
     override val id: Long,
-    override val entityDto: EntityDto?,
+    override val entityRecord: EntityRecordDto?,
 
     val name: String,
     val templateField1: String,

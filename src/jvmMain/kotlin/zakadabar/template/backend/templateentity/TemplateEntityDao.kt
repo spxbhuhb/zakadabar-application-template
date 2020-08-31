@@ -1,9 +1,5 @@
 /*
- * Copyright © 2020, Simplexion, Hungary. All rights reserved.
- *
- * This source code contains proprietary information; it is provided under a license agreement
- * containing restrictions on use and distribution and are also protected by copyright, patent, and
- * other intellectual and industrial property laws.
+ * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
 package zakadabar.template.backend.templateentity
@@ -22,7 +18,7 @@ class TemplateEntityDao(id: EntityID<Long>) : LongEntity(id) {
 
     fun toDto(entityDao: EntityDao) = TemplateEntityDto(
         id = id.value,
-        entityDto = null, // do not include entity by default
+        entityRecord = null, // do not include entity by default
         name = entityDao.name,
         templateField1 = templateField1,
         templateField2 = templateField2
