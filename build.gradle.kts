@@ -14,11 +14,11 @@ plugins {
 }
 
 group = "hu.simplexion.zakadabar"
-version = "2020.8.31"
+version = "2020.9.21"
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 
-val stackVersion by extra { "2020.8.31" }
+val stackVersion by extra { "2020.9.21" }
 
 repositories {
     mavenCentral()

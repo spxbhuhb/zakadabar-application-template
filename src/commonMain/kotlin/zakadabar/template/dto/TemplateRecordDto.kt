@@ -4,9 +4,9 @@
 package zakadabar.template.dto
 
 import kotlinx.serialization.Serializable
-import zakadabar.stack.data.DtoWithRecordCompanion
+import zakadabar.stack.data.record.RecordDto
+import zakadabar.stack.data.record.RecordDtoCompanion
 import zakadabar.stack.data.schema.DtoSchema
-import zakadabar.stack.extend.DtoWithRecordContract
 import zakadabar.template.Template
 
 @Serializable
@@ -17,10 +17,10 @@ data class TemplateRecordDto(
     val templateField1: String,
     val templateField2: String,
 
-    ) : DtoWithRecordContract<TemplateRecordDto> {
+    ) : RecordDto<TemplateRecordDto> {
 
-    companion object : DtoWithRecordCompanion<TemplateRecordDto>() {
-        val type = "${Template.shid}/template-record"
+    companion object : RecordDtoCompanion<TemplateRecordDto>() {
+        override val type = "${Template.shid}/template-record"
     }
 
     override fun schema() = DtoSchema.build {
@@ -29,5 +29,7 @@ data class TemplateRecordDto(
     }
 
     override fun comm() = comm
+
+    override fun getType() = type
 
 }
