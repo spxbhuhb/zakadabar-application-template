@@ -10,6 +10,14 @@ plugins {
     application
 }
 
+tasks.register<zakadabar.gradle.CustomizeTask>("customize") {
+    applicationName = "Magic"
+    packageName = "hu.simplexion.test"
+    // sqlJdbcUrl = "jdbc:postgresql://localhost:5432/${applicationName.toLowerCase()}"
+    // sqlUsername = "test"
+    // sqlPassword = "Almafa.12"
+}
+
 group = "hu.simplexion.zakadabar"
 version = "2021.4.12"
 
@@ -58,9 +66,6 @@ kotlin {
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     // seems like this does not work - minimize()
 }
-
-// Create a task using the task type
-tasks.register<zakadabar.gradle.CustomizeTask>("customize")
 
 val distDir = "$buildDir/${project.name}-$version-server"
 
