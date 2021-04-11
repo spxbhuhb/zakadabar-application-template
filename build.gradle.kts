@@ -12,6 +12,7 @@ plugins {
 }
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
+    group = "zakadabar"
     applicationName = "Magic"
     packageName = "hu.simplexion.test"
     // sqlJdbcUrl = "jdbc:postgresql://localhost:5432/${applicationName.toLowerCase()}"
@@ -63,12 +64,11 @@ kotlin {
     }
 }
 
-
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     // seems like this does not work - minimize()
 }
 
-val distDir = "$buildDir/${project.name}-$version-server"
+val distDir = "$buildDir/app/${project.name}-$version-server"
 
 val copyAppStruct by tasks.registering(Copy::class) {
     from("$projectDir/template/app")
@@ -111,19 +111,20 @@ val copyAppUsr by tasks.registering(Copy::class) {
     include("LICENSE.txt")
 }
 
-val zkPackage by tasks.registering(Zip::class) {
-    dependsOn(copyAppStruct, copyAppLib, copyAppStatic, copyAppIndex, copyAppUsr)
+val zkBuild by tasks.registering(Zip::class) {
+    group = "zakadabar"
+
+    dependsOn(tasks["build"], copyAppStruct, copyAppLib, copyAppStatic, copyAppIndex, copyAppUsr)
 
     archiveFileName.set("${project.name}-${project.version}-app.zip")
     destinationDirectory.set(file("$buildDir/app"))
 
-    from("$buildDir/appDist")
+    from(distDir)
 }
-
 
 docker {
 
-    dependsOn(tasks.getByName("zkPackage"))
+    dependsOn(tasks.getByName("zkBuild"))
 
     name = project.name
 
@@ -132,4 +133,9 @@ docker {
 
     copySpec.from(distDir).into("local/{$project.name}")
 
+}
+
+val zkDocker by tasks.creating(Task::class) {
+    group = "zakadabar"
+    dependsOn(tasks.getByName("docker"))
 }

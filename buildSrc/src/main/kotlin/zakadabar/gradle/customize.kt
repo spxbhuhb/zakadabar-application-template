@@ -48,9 +48,9 @@ abstract class CustomizeTask : DefaultTask() {
 
     @TaskAction
     fun customizeProject() {
-//        if (this.project.rootProject.name == "zakadabar-application-template") {
-//            throw IllegalStateException("You have to change name of the project in settings.gradle.kts!")
-//        }
+        if (this.project.rootProject.name == "zakadabar-application-template") {
+            throw IllegalStateException("You have to change name of the project in settings.gradle.kts!")
+        }
 
         if (packageName == "zakadabar.template") {
             throw IllegalStateException("You have to change the base package name in the customize task in build.gradle.kts!")
@@ -58,6 +58,10 @@ abstract class CustomizeTask : DefaultTask() {
 
         if (packageName.endsWith(".")) {
             throw IllegalArgumentException("The package name in gradle.properties must not end with a dot!")
+        }
+
+        if (! File(rootDir, "src/commonMain/kotlin/zakadabar/template").exists()) {
+            throw IllegalArgumentException("Customization must not be run more than once!")
         }
 
         println("Customising: $applicationName / $packageName")
