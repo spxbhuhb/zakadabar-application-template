@@ -13,7 +13,7 @@ plugins {
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
     group = "zakadabar"
-    applicationName = "Magic"
+    // applicationTitle = "Magic World"
     packageName = "hu.simplexion.test"
     // sqlJdbcUrl = "jdbc:postgresql://localhost:5432/${applicationName.toLowerCase()}"
     // sqlUsername = "test"
@@ -122,16 +122,24 @@ val zkBuild by tasks.registering(Zip::class) {
     from(distDir)
 }
 
+val zkDockerPrepare by tasks.register<zakadabar.gradle.DockerPrepareTask>("zkDockerPrepare") {
+    group = "zakadabar"
+}
+
 docker {
 
-    dependsOn(tasks.getByName("zkBuild"))
+    dependsOn(tasks.getByName("zkBuild"), zkDockerPrepare)
 
     name = project.name
 
     pull(true)
     setDockerfile(file("Dockerfile"))
 
-    copySpec.from(distDir).into("local/{$project.name}")
+    copySpec {
+        from(distDir)
+        into("local/${project.name}")
+
+    }
 
 }
 

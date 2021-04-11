@@ -18,7 +18,7 @@ services:
       retries: 5
 
   app:
-    image: zakadabar-template
+    image: zakadabar-template/version
     depends_on:
       db:
         condition: service_healthy
