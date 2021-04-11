@@ -211,7 +211,7 @@ abstract class CustomizeTask : DefaultTask() {
     }
 
     private fun dockerFile() {
-        val path = Paths.get(rootDir, "Dockerfile.yml")
+        val path = Paths.get(rootDir, "Dockerfile")
         val content = Files.readString(path)
 
         val newContent = content
