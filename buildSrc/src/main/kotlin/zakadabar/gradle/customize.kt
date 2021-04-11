@@ -10,11 +10,15 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
+import java.util.*
 
 abstract class CustomizeTask : DefaultTask() {
 
     @Input
     var applicationName: String = this.project.rootProject.name
+
+    @Input
+    var applicationTitle: String = this.project.rootProject.name.capitalize()
 
     @Input
     var packageName: String = "zakadabar.template"
@@ -29,10 +33,18 @@ abstract class CustomizeTask : DefaultTask() {
     var sqlJdbcUrl = ""
 
     @Input
-    var sqlUsername = "test"
+    var sqlUsername = ""
 
     @Input
-    var sqlPassword = "Almafa.12"
+    var sqlPassword = ""
+
+    private val generatedPassword = UUID.randomUUID().toString()
+
+    @Input
+    var dockerImageName = applicationName
+
+    @Input
+    var dockerPostgresDb = applicationName
 
     @TaskAction
     fun customizeProject() {
@@ -59,6 +71,10 @@ abstract class CustomizeTask : DefaultTask() {
         index()
         strings()
         yaml()
+
+        dockerYaml()
+        dockerCompose()
+        dockerFile()
 
         println("Customisation: DONE")
     }
@@ -117,7 +133,7 @@ abstract class CustomizeTask : DefaultTask() {
         val content = Files.readString(path)
 
         val newContent = content
-            .replace("<title>template</title>", "<title>${applicationName.capitalize()}</title>")
+            .replace("<title>template</title>", "<title>${applicationTitle}</title>")
             .replace("/zakadabar-application-template.js", "/${project.rootProject.name}.js")
 
         Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
@@ -131,7 +147,7 @@ abstract class CustomizeTask : DefaultTask() {
         val content = Files.readString(path)
 
         val newContent = content
-            .replace("by \"template\"", "by \"${applicationName.capitalize()}\"")
+            .replace("by \"template\"", "by \"${applicationTitle}\"")
 
         Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 
@@ -142,16 +158,68 @@ abstract class CustomizeTask : DefaultTask() {
         val path = Paths.get(rootDir, "template/app/etc/zakadabar-server.yaml")
         val content = Files.readString(path)
 
-        val jdbc = "  jdbcUrl: ${if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://localhost:5432/${applicationName.toLowerCase()}" else sqlJdbcUrl}"
+        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://localhost/${applicationName}" else sqlJdbcUrl
+        val username = if (sqlUsername.isBlank()) "template" else sqlUsername
+        val password = if (sqlPassword.isBlank()) "template" else sqlPassword
 
         val newContent = content
-            .replace("  jdbcUrl: jdbc:postgresql://localhost:5432/zakadabar", jdbc)
-            .replace("  username: test", "  username: $sqlUsername")
-            .replace("  password: Almafa.12", "  password: $sqlPassword")
+            .replace("  jdbcUrl: jdbc:postgresql://localhost/template", "  jdbcUrl: $jdbcUrl")
+            .replace("  username: template", "  username: $username")
+            .replace("  password: template", "  password: $password")
             .replace("  - zakadabar.template.backend.Module", "  - $packageName.backend.Module")
 
         Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 
         println("    application configuration: $path")
     }
+
+    private fun dockerYaml() {
+        val path = Paths.get(rootDir, "template/app/etc/zakadabar-server-docker.yaml")
+        val content = Files.readString(path)
+
+        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://db/${applicationName}" else sqlJdbcUrl
+        val username = if (sqlUsername.isBlank()) applicationName else sqlUsername
+        val password = if (sqlPassword.isBlank()) generatedPassword else sqlPassword
+
+        val newContent = content
+            .replace("  jdbcUrl: jdbc:postgresql://db/template", "  jdbcUrl: $jdbcUrl")
+            .replace("  username: template", "  username: $username")
+            .replace("  password: template", "  password: $password")
+            .replace("  - zakadabar.template.backend.Module", "  - $packageName.backend.Module")
+
+        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+
+        println("    application configuration: $path")
+    }
+
+    private fun dockerCompose() {
+        val path = Paths.get(rootDir, "docker-compose.yml")
+        val content = Files.readString(path)
+
+        val username = if (sqlUsername.isBlank()) applicationName else sqlUsername
+        val password = if (sqlPassword.isBlank()) generatedPassword else sqlPassword
+
+        val newContent = content
+            .replace("POSTGRES_DB: template", "POSTGRES_DB: $dockerPostgresDb")
+            .replace("POSTGRES_USER: template", "POSTGRES_USER: $username")
+            .replace("POSTGRES_PASSWORD: template", "POSTGRES_PASSWORD: $password")
+            .replace("image: zakadabar-template", "image: $dockerImageName")
+
+        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+
+        println("    docker compose: $path")
+    }
+
+    private fun dockerFile() {
+        val path = Paths.get(rootDir, "Dockerfile.yml")
+        val content = Files.readString(path)
+
+        val newContent = content
+            .replace("zakadabar-template", project.rootProject.name)
+
+        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+
+        println("    dockerfile: $path")
+    }
+
 }

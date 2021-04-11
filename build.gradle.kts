@@ -8,9 +8,10 @@ plugins {
     id("org.jetbrains.kotlin.plugin.noarg") version "1.4.31"
     id("com.github.johnrengelman.shadow") version "6.0.0"
     application
+    id("com.palantir.docker") version "0.25.0"
 }
 
-tasks.register<zakadabar.gradle.CustomizeTask>("zakadabarCustomize") {
+tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
     applicationName = "Magic"
     packageName = "hu.simplexion.test"
     // sqlJdbcUrl = "jdbc:postgresql://localhost:5432/${applicationName.toLowerCase()}"
@@ -110,11 +111,25 @@ val copyAppUsr by tasks.registering(Copy::class) {
     include("LICENSE.txt")
 }
 
-val appDistZip by tasks.registering(Zip::class) {
+val zkPackage by tasks.registering(Zip::class) {
     dependsOn(copyAppStruct, copyAppLib, copyAppStatic, copyAppIndex, copyAppUsr)
 
     archiveFileName.set("${project.name}-${project.version}-app.zip")
     destinationDirectory.set(file("$buildDir/app"))
 
     from("$buildDir/appDist")
+}
+
+
+docker {
+
+    dependsOn(tasks.getByName("zkPackage"))
+
+    name = project.name
+
+    pull(true)
+    setDockerfile(file("Dockerfile"))
+
+    copySpec.from(distDir).into("local/{$project.name}")
+
 }

@@ -22,5 +22,5 @@ This repository contains an application template which you may use to start a ne
 1. Run `kotlin browser:jsBrowserRun` - starts a webpack dev server and opens a browser window
 1. Try out.
 1. Run `build:build`
-1. Run `other:appDistZip`
-1. Look into the `$buildDir/${project.name}-$version-server` directory to have the package you can upload to a server.
+1. Run `other:zakadabarAppPackage`
+1. Look into the `build/${project.name}-$version-server` directory to have the package you can upload to a server.
