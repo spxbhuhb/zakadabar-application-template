@@ -11,7 +11,7 @@ This repository contains an application template which you may use to start a ne
 1. Edit [settings.gradle.kts](settings.gradle.kts):
     1. Change project name.
 1. Edit [build.gradle.kts](build.gradle.kts)
-    1. Change parameters of the "customize" task:
+    1. Change parameters of the "zakadabarCustomise" task:
         1. name of the application,
         1. the package you would like to use,
         1. database connection parameters (comment out as needed).
