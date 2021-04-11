@@ -118,7 +118,7 @@ abstract class CustomizeTask : DefaultTask() {
 
         val newContent = content
             .replace("<title>template</title>", "<title>${applicationName.capitalize()}</title>")
-            .replace("/zakadabar-application-template.js", "$applicationName.js")
+            .replace("/zakadabar-application-template.js", "/${project.rootProject.name}.js")
 
         Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 

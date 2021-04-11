@@ -10,7 +10,7 @@ plugins {
     application
 }
 
-tasks.register<zakadabar.gradle.CustomizeTask>("customize") {
+tasks.register<zakadabar.gradle.CustomizeTask>("zakadabarCustomize") {
     applicationName = "Magic"
     packageName = "hu.simplexion.test"
     // sqlJdbcUrl = "jdbc:postgresql://localhost:5432/${applicationName.toLowerCase()}"
