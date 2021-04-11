@@ -197,7 +197,7 @@ abstract class CustomizeTask : DefaultTask() {
     }
 
     private fun dockerCompose() {
-        val path = Paths.get(rootDir, "docker-compose.yml")
+        val path = Paths.get(rootDir, "template/docker/docker-compose.yml")
         val content = Files.readString(path)
 
         val username = if (sqlUsername.isBlank()) applicationName else sqlUsername
@@ -215,7 +215,7 @@ abstract class CustomizeTask : DefaultTask() {
     }
 
     private fun dockerFile() {
-        val path = Paths.get(rootDir, "Dockerfile")
+        val path = Paths.get(rootDir, "template/docker/Dockerfile")
         val content = Files.readString(path)
 
         val newContent = content
