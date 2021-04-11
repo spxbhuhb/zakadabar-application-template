@@ -1,43 +1,42 @@
 /*
  * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-@file:Suppress("unused")
+@file:Suppress("unused") // main is called by webpack
 
-import kotlinx.browser.document
-import zakadabar.stack.frontend.FrontendContext
-import zakadabar.stack.frontend.builtin.desktop.Desktop
-import zakadabar.stack.frontend.builtin.desktop.messages.GlobalNavigationRequest
-import zakadabar.stack.frontend.elements.SimpleElement
-import zakadabar.stack.frontend.util.launch
-import zakadabar.template.frontend.Module
+import kotlinx.browser.window
+import zakadabar.stack.data.builtin.account.SessionDto
+import zakadabar.stack.data.builtin.resources.StringsByLocale
+import zakadabar.stack.frontend.application.ZkApplication
+import zakadabar.stack.frontend.application.ZkExecutor
+import zakadabar.stack.frontend.builtin.ZkBuiltinTheme
+import zakadabar.stack.frontend.builtin.ZkElement
+import zakadabar.stack.frontend.util.io
+import zakadabar.template.frontend.Routing
+import zakadabar.template.resources.Strings
 
 fun main() {
 
-    launch {
+    io {
 
-        // add KClass names as data attributes to DOM elements, useful for debugging, not meant for production
-        // See: https://github.com/spxbhuhb/zakadabar-stack/blob/master/doc/misc/Productivity.md#simpleelement-addkclass
+        ZkElement.addKClass = true
 
-        SimpleElement.addKClass = true
+        val session = SessionDto.read(0L)
 
-        // Initialize the frontend. This method needs a running backend because it
-        // fetches the account of the user who runs the frontend.
-        // See: https://github.com/spxbhuhb/zakadabar-stack/blob/master/doc/cookbook/common/Accounts.md
+        with(ZkApplication) {
 
-        FrontendContext.init()
+            executor = ZkExecutor(session.account, session.anonymous, session.roles)
 
-        // Add modules to the frontend
+            theme = ZkBuiltinTheme()
 
-        FrontendContext += zakadabar.stack.frontend.Module
-        FrontendContext += Module
+            val locale = session.account.locale ?: window.navigator.language
 
-        // Create an instance of the default desktop, initialize it and append it to the body
+            strings = Strings.merge(StringsByLocale(locale).execute())
 
-        document.body?.appendChild(Desktop().init().element)
+            routing = Routing
 
-        // Kick off the navigation, this just goes to the top of the entity tree.
+            init()
+        }
 
-        FrontendContext.dispatcher.postSync { GlobalNavigationRequest(null) }
     }
 
 }

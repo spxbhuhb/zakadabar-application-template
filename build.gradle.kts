@@ -1,59 +1,48 @@
 /*
  * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform") version "1.4.0"
-    kotlin("plugin.serialization") version "1.4.0"
-    application
+    kotlin("multiplatform") version "1.4.31"
+    kotlin("plugin.serialization") version "1.4.31"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.31"
     id("com.github.johnrengelman.shadow") version "6.0.0"
-    `maven-publish`
-    signing
+    application
 }
 
 group = "hu.simplexion.zakadabar"
-version = "2020.9.21"
+version = "2021.4.12"
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 
-val stackVersion by extra { "2020.9.21" }
+val stackVersion by extra { "2021.4.8" }
+val datetimeVersion = "0.1.0"
 
 repositories {
     mavenCentral()
     jcenter()
+    maven(url = "https://kotlin.bintray.com/kotlinx/") // for kotlinx.datetime, to be changed to jcenter()
 
     if (stackVersion.contains("SNAPSHOT")) {
         mavenLocal()
     }
-
-    fun gps(project : String) {
-        maven {
-            name = "gps-$project"
-            url = uri("https://maven.pkg.github.com/$project")
-            metadataSources {
-                gradleMetadata()
-            }
-            credentials {
-                username = properties["github.user"].toString()
-                password = properties["github.key"].toString()
-            }
-        }
-    }
-
-    gps("spxbhuhb/zakadabar-stack")
-
 }
 
-tasks.withType<KotlinCompile>().all {
-    kotlinOptions.jvmTarget = "1.8"
+application {
+    mainClassName = "zakadabar.stack.backend.ServerKt"
+}
+
+noArg {
+    annotation("kotlinx.serialization.Serializable")
 }
 
 kotlin {
 
     jvm {
         withJava()
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"
+        }
     }
 
     js {
@@ -61,58 +50,65 @@ kotlin {
     }
 
     sourceSets["commonMain"].dependencies {
-        api("hu.simplexion.zakadabar:zakadabar-stack:$stackVersion")
-    }
-
-    sourceSets["jvmMain"].dependencies {
-        implementation(kotlin("stdlib-jdk8"))
+        implementation("hu.simplexion.zakadabar:core:$stackVersion")
     }
 }
 
-// -------------------------------------------------------------
-// Building the shadow jar and the application distribution
-// -------------------------------------------------------------
 
-application {
-    mainClassName = "template.MainKt"
-}
-
-tasks.named<ShadowJar>("shadowJar") {
+tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     // seems like this does not work - minimize()
 }
 
+// Create a task using the task type
+tasks.register<zakadabar.gradle.CustomizeTask>("customize")
+
+val distDir = "$buildDir/${project.name}-$version-server"
+
 val copyAppStruct by tasks.registering(Copy::class) {
-    from("$projectDir/app")
-    into("$buildDir/appDist")
+    from("$projectDir/template/app")
+    into(distDir)
     include("**")
     exclude("**/.gitignore")
 }
 
 val copyAppLib by tasks.registering(Copy::class) {
     from("$buildDir/libs")
-    into("$buildDir/appDist/lib")
+    into("$distDir/lib")
     include("${base.archivesBaseName}-${project.version}-all.jar")
+}
+
+val copyAppIndex by tasks.registering(Copy::class) {
+    from("$buildDir/distributions")
+    into("$distDir/var/static")
+    include("index.html")
+    filter { line: String ->
+        line.replace("""src="/${project.name}.js"""", """src="/${project.name}-${project.version}.js"""")
+    }
 }
 
 val copyAppStatic by tasks.registering(Copy::class) {
     from("$buildDir/distributions")
-    into("$buildDir/appDist/var/static")
+    into("$distDir/var/static")
     include("**")
+
+    exclude("index.html")
     exclude("*.tar")
     exclude("*.zip")
+
+    rename("${project.name}.js", "${project.name}-${project.version}.js")
 }
 
 val copyAppUsr by tasks.registering(Copy::class) {
     from("$projectDir")
-    into("$buildDir/appDist/usr")
+    into("$distDir/usr")
     include("README.md")
     include("LICENSE.txt")
 }
 
-val appDistribution by tasks.registering(Zip::class) {
-    dependsOn(copyAppStruct, copyAppLib, copyAppStatic, copyAppUsr)
+val appDistZip by tasks.registering(Zip::class) {
+    dependsOn(copyAppStruct, copyAppLib, copyAppStatic, copyAppIndex, copyAppUsr)
 
-    archiveFileName.set("${base.archivesBaseName}-${project.version}-app.zip")
+    archiveFileName.set("${project.name}-${project.version}-app.zip")
     destinationDirectory.set(file("$buildDir/app"))
 
     from("$buildDir/appDist")

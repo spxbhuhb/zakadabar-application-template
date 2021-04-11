@@ -1,35 +1,34 @@
 /*
  * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
+@file:Suppress("UNUSED_PARAMETER", "unused")
 
 package zakadabar.template.backend.templaterecord
 
-import io.ktor.features.*
 import io.ktor.routing.*
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import zakadabar.stack.backend.data.DtoBackend
+import zakadabar.stack.backend.authorize
+import zakadabar.stack.backend.data.record.RecordBackend
 import zakadabar.stack.util.Executor
-import zakadabar.template.dto.TemplateRecordDto
+import zakadabar.template.data.TemplateRecordDto
 
-object TemplateRecordBackend : DtoBackend<TemplateRecordDto>() {
+object TemplateRecordBackend : RecordBackend<TemplateRecordDto>() {
 
     override val dtoClass = TemplateRecordDto::class
 
-    override fun init() {
-        transaction {
-            SchemaUtils.createMissingTablesAndColumns(
-                TemplateRecordTable
-            )
-        }
+    override fun onModuleLoad() {
+        + TemplateRecordTable
     }
 
-    override fun install(route: Route) {
+    override fun onInstallRoutes(route: Route) {
         route.crud()
     }
 
     override fun all(executor: Executor) = transaction {
+
+        authorize(true)
+
         TemplateRecordTable
             .selectAll()
             .map(TemplateRecordTable::toDto)
@@ -37,35 +36,33 @@ object TemplateRecordBackend : DtoBackend<TemplateRecordDto>() {
 
     override fun create(executor: Executor, dto: TemplateRecordDto) = transaction {
 
-        // TODO authorization
+        authorize(true)
 
-        val dao = TemplateRecordDao.new {
-            templateField1 = dto.templateField1
-            templateField2 = dto.templateField2
-        }
-
-        dao.toDto()
+        TemplateRecordDao.new {
+            name = dto.name
+        }.toDto()
     }
 
+    override fun read(executor: Executor, recordId: Long) = transaction {
 
-    override fun read(executor: Executor, id: Long): TemplateRecordDto = transaction {
+        authorize(true)
 
-        // TODO Authorization
-
-        TemplateRecordDao.find { TemplateRecordTable.id eq id }.firstOrNull()?.toDto() ?: throw NotFoundException()
-
+        TemplateRecordDao[recordId].toDto()
     }
 
     override fun update(executor: Executor, dto: TemplateRecordDto) = transaction {
 
-        // TODO authorization
+        authorize(true)
 
         val dao = TemplateRecordDao[dto.id]
-
-        dao.templateField1 = dto.templateField1
-        dao.templateField2 = dto.templateField2
-
+        dao.name = dto.name
         dao.toDto()
     }
 
+    override fun delete(executor: Executor, recordId: Long) = transaction {
+
+        authorize(true)
+
+        TemplateRecordDao[recordId].delete()
+    }
 }
