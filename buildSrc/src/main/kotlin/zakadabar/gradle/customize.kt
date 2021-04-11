@@ -39,18 +39,30 @@ abstract class CustomizeTask : DefaultTask() {
             throw IllegalArgumentException("The package name in gradle.properties must not end with a dot!")
         }
 
-        println("customizing: $projectName / $packageName")
+        println("Customising: $projectName / $packageName")
 
-        mkdir("src/commonMain/kotlin/$packageName")
-        moveAll("src/commonMain/kotlin/zakadabar/template", "src/commonMain/kotlin/$packageName")
-        trash("src/commonMain/kotlin/zakadabar")
-        fixPackages()
+        sourceSet("commonMain")
+        sourceSet("jsMain")
+        sourceSet("jvmMain")
+
+        packageNames()
+
+        index()
+        strings()
+
+        println("Customisation: DONE")
+    }
+
+    private fun sourceSet(targetName: String) {
+        mkdir("src/$targetName/kotlin/$packageName")
+        moveAll("src/$targetName/kotlin/zakadabar/template", "src/$targetName/kotlin/$packageName")
+        trash("src/$targetName/kotlin/zakadabar")
     }
 
     private fun mkdir(dirs: String) {
         val path = Paths.get(rootDir, dirs)
         Files.createDirectories(path)
-        println("mkdir: $path")
+        println("    create: $path")
     }
 
     private fun moveAll(from: String, to: String) {
@@ -58,7 +70,7 @@ abstract class CustomizeTask : DefaultTask() {
         Files.list(fromPath).forEach {
             val toPath = Paths.get(rootDir, to).resolve(it.fileName)
             Files.move(it, toPath)
-            println("move: $it  >  $toPath")
+            println("    move: $it  >  $toPath")
         }
     }
 
@@ -66,10 +78,10 @@ abstract class CustomizeTask : DefaultTask() {
         val fromPath = Paths.get(rootDir, dir)
         val toPath = Paths.get(rootDir, "trash").resolve(fromPath.fileName)
         Files.move(fromPath, toPath)
-        println("trash: $fromPath")
+        println("    trash: $fromPath")
     }
 
-    private fun fixPackages() {
+    private fun packageNames() {
         File(rootDir, "src").walk().forEach {
             if (! it.isFile) return@forEach
             if (! it.name.endsWith(".kt")) return@forEach
@@ -77,10 +89,39 @@ abstract class CustomizeTask : DefaultTask() {
             val content = Files.readString(it.toPath())
             if ("package zakadabar.template" !in content) return@forEach
 
-            val newContent = content.replace("package zakadabar.template", "package $packageName")
+            val newContent = content
+                .replace("package zakadabar.template", "package $packageName")
+                .replace("import zakadabar.template", "import $packageName")
+
             Files.write(it.toPath(), newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 
-            println("packageName: ${it.absolutePath}")
+            println("    package name: ${it.absolutePath}")
         }
+    }
+
+    private fun index() {
+        val path = Paths.get(rootDir, "src/jsMain/resources/index.html")
+        val content = Files.readString(path)
+
+        val newContent = content
+            .replace("<title>template</title>", "<title>${projectName.capitalize()}</title>")
+            .replace("/zakadabar-application-template.js", "$projectName.js")
+
+        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+
+        println("    page title: $path")
+        println("    JS file name: $path")
+    }
+
+    private fun strings() {
+        val path = Paths.get(rootDir, "src/commonMain/resources/AppStrings.kt")
+        val content = Files.readString(path)
+
+        val newContent = content
+            .replace("by \"template\"", "by \"${projectName.capitalize()}\"")
+
+        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+
+        println("    application name: $path")
     }
 }

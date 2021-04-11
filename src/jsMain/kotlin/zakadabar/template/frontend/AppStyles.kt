@@ -6,7 +6,7 @@ package zakadabar.template.frontend
 import zakadabar.stack.frontend.application.ZkApplication
 import zakadabar.stack.frontend.resources.css.ZkCssStyleSheet
 
-object TemplateStyles : ZkCssStyleSheet<TemplateStyles>(ZkApplication.theme) {
+object AppStyles : ZkCssStyleSheet<AppStyles>(ZkApplication.theme) {
 
     val page by cssClass {
         overflowY = "scroll"

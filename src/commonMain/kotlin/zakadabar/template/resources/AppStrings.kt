@@ -12,11 +12,10 @@ import zakadabar.stack.resources.ZkBuiltinStrings
 // In that case - or when you write an actual component library - you want to your
 // strings to be customizable.
 
-internal var Strings = TemplateStrings()
+internal var Strings = AppStrings()
 
-class TemplateStrings : ZkBuiltinStrings() {
+class AppStrings : ZkBuiltinStrings() {
     val applicationName by "template"
     val exampleRecords by "exampleRecords"
     val basics by "basics"
 }
-
