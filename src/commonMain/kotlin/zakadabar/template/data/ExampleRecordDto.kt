@@ -10,14 +10,14 @@ import zakadabar.stack.data.record.RecordId
 import zakadabar.stack.data.schema.DtoSchema
 
 @Serializable
-data class TemplateRecordDto(
+data class ExampleRecordDto(
 
-    override var id: RecordId<TemplateRecordDto>,
+    override var id: RecordId<ExampleRecordDto>,
     var name: String
 
-) : RecordDto<TemplateRecordDto> {
+) : RecordDto<ExampleRecordDto> {
 
-    companion object : RecordDtoCompanion<TemplateRecordDto>({
+    companion object : RecordDtoCompanion<ExampleRecordDto>({
         recordType = "template"
     })
 

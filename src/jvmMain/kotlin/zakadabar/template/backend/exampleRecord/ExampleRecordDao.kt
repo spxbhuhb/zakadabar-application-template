@@ -1,19 +1,19 @@
 /*
  * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package zakadabar.template.backend.templaterecord
+package zakadabar.template.backend.exampleRecord
 
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import zakadabar.template.data.TemplateRecordDto
+import zakadabar.template.data.ExampleRecordDto
 
-class TemplateRecordDao(id: EntityID<Long>) : LongEntity(id) {
-    companion object : LongEntityClass<TemplateRecordDao>(TemplateRecordTable)
+class ExampleRecordDao(id: EntityID<Long>) : LongEntity(id) {
+    companion object : LongEntityClass<ExampleRecordDao>(ExampleRecordTable)
 
-    var name by TemplateRecordTable.name
+    var name by ExampleRecordTable.name
 
-    fun toDto() = TemplateRecordDto(
+    fun toDto() = ExampleRecordDto(
         id = id.value,
         name = name
     )

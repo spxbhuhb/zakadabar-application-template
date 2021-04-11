@@ -3,7 +3,7 @@
  */
 @file:Suppress("UNUSED_PARAMETER", "unused")
 
-package zakadabar.template.backend.templaterecord
+package zakadabar.template.backend.exampleRecord
 
 import io.ktor.routing.*
 import org.jetbrains.exposed.sql.selectAll
@@ -11,14 +11,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import zakadabar.stack.backend.authorize
 import zakadabar.stack.backend.data.record.RecordBackend
 import zakadabar.stack.util.Executor
-import zakadabar.template.data.TemplateRecordDto
+import zakadabar.template.data.ExampleRecordDto
 
-object TemplateRecordBackend : RecordBackend<TemplateRecordDto>() {
+object ExampleRecordBackend : RecordBackend<ExampleRecordDto>() {
 
-    override val dtoClass = TemplateRecordDto::class
+    override val dtoClass = ExampleRecordDto::class
 
     override fun onModuleLoad() {
-        + TemplateRecordTable
+        + ExampleRecordTable
     }
 
     override fun onInstallRoutes(route: Route) {
@@ -29,16 +29,16 @@ object TemplateRecordBackend : RecordBackend<TemplateRecordDto>() {
 
         authorize(true)
 
-        TemplateRecordTable
+        ExampleRecordTable
             .selectAll()
-            .map(TemplateRecordTable::toDto)
+            .map(ExampleRecordTable::toDto)
     }
 
-    override fun create(executor: Executor, dto: TemplateRecordDto) = transaction {
+    override fun create(executor: Executor, dto: ExampleRecordDto) = transaction {
 
         authorize(true)
 
-        TemplateRecordDao.new {
+        ExampleRecordDao.new {
             name = dto.name
         }.toDto()
     }
@@ -47,14 +47,14 @@ object TemplateRecordBackend : RecordBackend<TemplateRecordDto>() {
 
         authorize(true)
 
-        TemplateRecordDao[recordId].toDto()
+        ExampleRecordDao[recordId].toDto()
     }
 
-    override fun update(executor: Executor, dto: TemplateRecordDto) = transaction {
+    override fun update(executor: Executor, dto: ExampleRecordDto) = transaction {
 
         authorize(true)
 
-        val dao = TemplateRecordDao[dto.id]
+        val dao = ExampleRecordDao[dto.id]
         dao.name = dto.name
         dao.toDto()
     }
@@ -63,6 +63,6 @@ object TemplateRecordBackend : RecordBackend<TemplateRecordDto>() {
 
         authorize(true)
 
-        TemplateRecordDao[recordId].delete()
+        ExampleRecordDao[recordId].delete()
     }
 }

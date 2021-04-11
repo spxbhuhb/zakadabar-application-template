@@ -16,7 +16,7 @@ internal var Strings = TemplateStrings()
 
 class TemplateStrings : ZkBuiltinStrings() {
     val applicationName by "template"
-    val templateRecords by "templateRecords"
+    val exampleRecords by "exampleRecords"
     val basics by "basics"
 }
 

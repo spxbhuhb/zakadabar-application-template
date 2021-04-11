@@ -5,7 +5,7 @@ package zakadabar.template.frontend
 
 import zakadabar.stack.frontend.builtin.sidebar.ZkSideBar
 import zakadabar.template.frontend.pages.Home
-import zakadabar.template.frontend.pages.templaterecord.TemplateRecords
+import zakadabar.template.frontend.pages.exampleRecord.ExampleRecords
 import zakadabar.template.resources.Strings
 
 object SideBar : ZkSideBar() {
@@ -21,7 +21,7 @@ object SideBar : ZkSideBar() {
 
         + title(Strings.applicationName, SideBar::hideMenu) { Home.open() }
 
-        + item(Strings.templateRecords) { TemplateRecords.openAll() }
+        + item(Strings.exampleRecords) { ExampleRecords.openAll() }
 
     }
 

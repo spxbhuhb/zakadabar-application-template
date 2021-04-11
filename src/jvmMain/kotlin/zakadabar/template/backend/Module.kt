@@ -15,7 +15,7 @@ import zakadabar.stack.backend.data.builtin.role.RoleBackend
 import zakadabar.stack.backend.data.builtin.rolegrant.RoleGrantBackend
 import zakadabar.stack.backend.data.builtin.session.SessionBackend
 import zakadabar.stack.util.PublicApi
-import zakadabar.template.backend.templaterecord.TemplateRecordBackend
+import zakadabar.template.backend.exampleRecord.ExampleRecordBackend
 
 @PublicApi
 object Module : BackendModule {
@@ -30,7 +30,7 @@ object Module : BackendModule {
         Server += AccountPrivateBackend
         Server += AccountPublicBackend
 
-        Server += TemplateRecordBackend
+        Server += ExampleRecordBackend
     }
 
 }

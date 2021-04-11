@@ -1,24 +1,24 @@
 /*
  * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package zakadabar.template.frontend.pages.templaterecord
+package zakadabar.template.frontend.pages.exampleRecord
 
 import zakadabar.stack.frontend.builtin.table.ZkTable
-import zakadabar.template.data.TemplateRecordDto
+import zakadabar.template.data.ExampleRecordDto
 import zakadabar.template.resources.Strings
 
-class Table : ZkTable<TemplateRecordDto>() {
+class Table : ZkTable<ExampleRecordDto>() {
 
     override fun onConfigure() {
-        title = Strings.templateRecords
-        crud = TemplateRecords
+        title = Strings.exampleRecords
+        crud = ExampleRecords
 
         add = true
         search = true
         export = true
 
-        + TemplateRecordDto::id
-        + TemplateRecordDto::name
+        + ExampleRecordDto::id
+        + ExampleRecordDto::name
 
         + actions()
     }
