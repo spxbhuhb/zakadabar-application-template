@@ -23,26 +23,27 @@ abstract class DockerPrepareTask : DefaultTask() {
 
     private fun dockerFile() {
         val fromPath = Paths.get(rootDir, "template/docker/Dockerfile")
-        val toPath = Paths.get(buildDir, "docker/Dockerfile-$version")
+        val toPath = Paths.get(buildDir, "docker/Dockerfile")
 
         val content = Files.readString(fromPath)
 
         val newContent = content
             .replace("version", version)
 
-        Files.write(toPath, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+        Files.createDirectories(Paths.get(buildDir, "docker"))
+        Files.write(toPath, newContent.toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
     }
 
     private fun dockerCompose() {
         val fromPath = Paths.get(rootDir, "template/docker/docker-compose.yml")
-        val toPath = Paths.get(buildDir, "app/${project.name}-$version-server/docker-compose-$version")
+        val toPath = Paths.get(buildDir, "app/docker-compose-$version.yml")
 
         val content = Files.readString(fromPath)
 
         val newContent = content
             .replace("version", version)
 
-        Files.write(toPath, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+        Files.write(toPath, newContent.toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
     }
 
 }

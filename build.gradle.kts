@@ -135,11 +135,7 @@ docker {
     pull(true)
     setDockerfile(file("Dockerfile"))
 
-    copySpec {
-        from(distDir)
-        into("local/${project.name}")
-
-    }
+    copySpec.from(distDir).into("local/${project.name}")
 
 }
 
