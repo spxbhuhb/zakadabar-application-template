@@ -10,10 +10,10 @@ This repository contains an application template which you may use to start a ne
 1. Edit [settings.gradle.kts](settings.gradle.kts):
     1. Change project name.
 1. Edit [build.gradle.kts](build.gradle.kts)
-    1. Change parameters of the "zakadabarCustomise" task:
-        1. name of the application,
+    1. Change `group` and `version`.
+    1. Change parameters of the "zakadabar:zkCustomise" task:
         1. the package you would like to use,
-        1. database connection parameters (comment out as needed).
+        1. any other parameters you want to change.
 1. Refresh gradle config in IDEA.
 1. `gradle zkCustomise`
 1. Check the `trash` directory: if nothing important is there (shouldn't be), delete it.

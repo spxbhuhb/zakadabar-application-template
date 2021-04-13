@@ -1,6 +1,6 @@
 database:
   driverClassName: org.postgresql.Driver
-  jdbcUrl: jdbc:postgresql://db:25432/@dockerSqlDb@
+  jdbcUrl: jdbc:postgresql://db/@dockerSqlDb@
   username: @dockerSqlUser@
   password: @dockerSqlPassword@
 
