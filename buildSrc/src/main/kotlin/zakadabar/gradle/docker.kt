@@ -17,6 +17,7 @@ abstract class DockerPrepareTask : DefaultTask() {
 
     @TaskAction
     private fun prepareDocker() {
+        Files.createDirectories(Paths.get(buildDir, "docker/local"))
         dockerFile()
         dockerCompose()
     }
@@ -28,9 +29,8 @@ abstract class DockerPrepareTask : DefaultTask() {
         val content = Files.readString(fromPath)
 
         val newContent = content
-            .replace("version", version)
+            .replace("@version@", version)
 
-        Files.createDirectories(Paths.get(buildDir, "docker"))
         Files.write(toPath, newContent.toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
     }
 
@@ -41,7 +41,7 @@ abstract class DockerPrepareTask : DefaultTask() {
         val content = Files.readString(fromPath)
 
         val newContent = content
-            .replace("version", version)
+            .replace("@version@", "/$version")
 
         Files.write(toPath, newContent.toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
     }

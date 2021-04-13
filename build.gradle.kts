@@ -126,16 +126,21 @@ val zkDockerPrepare by tasks.register<zakadabar.gradle.DockerPrepareTask>("zkDoc
     group = "zakadabar"
 }
 
+val zkDockerCopy by tasks.registering(Copy::class) {
+    from(distDir)
+    into("docker/local/${project.name}")
+    include("**")
+}
+
 docker {
 
-    dependsOn(tasks.getByName("zkBuild"), zkDockerPrepare)
+    dependsOn(zkBuild.get(), zkDockerPrepare, zkDockerCopy.get())
 
     name = project.name
+    tags.add(version.toString())
 
     pull(true)
     setDockerfile(file("Dockerfile"))
-
-    copySpec.from(distDir).into("local/${project.name}")
 
 }
 
