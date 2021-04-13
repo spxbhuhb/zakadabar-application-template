@@ -104,6 +104,7 @@ abstract class CustomizeTask : DefaultTask() {
         mapping["sqlDriver"] = sqlDriver
 
         mapping["sqlDatabase"] = sqlDatabase
+        mapping["sqlUrl"] = sqlUrl ?: "jdbc:postgresql://localhost/$sqlDatabase"
         mapping["sqlUser"] = sqlUser
         mapping["sqlPassword"] = sqlPassword
 
@@ -123,8 +124,6 @@ abstract class CustomizeTask : DefaultTask() {
 
         index()
         strings()
-
-        if (sqlUrl == null) sqlUrl = "jdbc:postgresql://localhost/$sqlDatabase"
 
         map("template/app/etc/zakadabar-server.yaml")
         map("template/app/etc/zakadabar-server-docker.yaml")

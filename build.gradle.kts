@@ -26,7 +26,7 @@ version = "2021.4.12"
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
-    packageName = "my.package.name" // the package your code resides in
+    packageName = "my.pkg.name" // the package your code resides in
 
     // ---- The following parameters are optional, values show defaults
 

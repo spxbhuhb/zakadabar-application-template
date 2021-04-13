@@ -2,7 +2,7 @@ database:
   driverClassName: @sqlDriver@
   jdbcUrl: @sqlUrl@
   username: @sqlUser@
-  password: @sqlPassword
+  password: @sqlPassword@
 
 traceRouting: false
 staticResources: ./var/static
