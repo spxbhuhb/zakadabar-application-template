@@ -128,7 +128,7 @@ val zkDockerPrepare by tasks.register<zakadabar.gradle.DockerPrepareTask>("zkDoc
 
 val zkDockerCopy by tasks.registering(Copy::class) {
     from(distDir)
-    into("docker/local/${project.name}")
+    into("$buildDir/docker/local/${project.name}")
     include("**")
 }
 
@@ -137,7 +137,7 @@ docker {
     dependsOn(zkBuild.get(), zkDockerPrepare, zkDockerCopy.get())
 
     name = project.name
-    tags.add(version.toString())
+    // this throws unsupported operation exception -- tags.add(version.toString())
 
     pull(true)
     setDockerfile(file("Dockerfile"))

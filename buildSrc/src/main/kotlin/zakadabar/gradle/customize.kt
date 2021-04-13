@@ -15,7 +15,7 @@ import java.util.*
 abstract class CustomizeTask : DefaultTask() {
 
     @Input
-    var applicationName: String = this.project.rootProject.name
+    var projectName: String = this.project.rootProject.name
 
     @Input
     var applicationTitle: String = this.project.rootProject.name.capitalize()
@@ -41,10 +41,10 @@ abstract class CustomizeTask : DefaultTask() {
     private val generatedPassword = UUID.randomUUID().toString()
 
     @Input
-    var dockerImageName = applicationName
+    var dockerImageName = projectName
 
     @Input
-    var dockerPostgresDb = applicationName
+    var dockerPostgresDb = projectName
 
     @TaskAction
     fun customizeProject() {
@@ -64,7 +64,7 @@ abstract class CustomizeTask : DefaultTask() {
             throw IllegalArgumentException("Customization must not be run more than once!")
         }
 
-        println("Customising: $applicationName / $packageName")
+        println("Customising: $projectName / $packageName")
 
         sourceSet("commonMain")
         sourceSet("jsMain")
@@ -162,7 +162,7 @@ abstract class CustomizeTask : DefaultTask() {
         val path = Paths.get(rootDir, "template/app/etc/zakadabar-server.yaml")
         val content = Files.readString(path)
 
-        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://localhost/${applicationName}" else sqlJdbcUrl
+        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://localhost/${projectName}" else sqlJdbcUrl
         val username = if (sqlUsername.isBlank()) "template" else sqlUsername
         val password = if (sqlPassword.isBlank()) "template" else sqlPassword
 
@@ -170,7 +170,8 @@ abstract class CustomizeTask : DefaultTask() {
             .replace("  jdbcUrl: jdbc:postgresql://localhost/template", "  jdbcUrl: $jdbcUrl")
             .replace("  username: template", "  username: $username")
             .replace("  password: template", "  password: $password")
-            .replace("  - zakadabar.template.backend.Module", "  - $packageName.backend.Module")
+            .replace("@packageName@", packageName)
+            .replace("@projectName@", projectName)
 
         Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 
@@ -181,15 +182,16 @@ abstract class CustomizeTask : DefaultTask() {
         val path = Paths.get(rootDir, "template/app/etc/zakadabar-server-docker.yaml")
         val content = Files.readString(path)
 
-        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://db/${applicationName}" else sqlJdbcUrl
-        val username = if (sqlUsername.isBlank()) applicationName else sqlUsername
+        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://db/${projectName}" else sqlJdbcUrl
+        val username = if (sqlUsername.isBlank()) projectName else sqlUsername
         val password = if (sqlPassword.isBlank()) generatedPassword else sqlPassword
 
         val newContent = content
             .replace("  jdbcUrl: jdbc:postgresql://db/template", "  jdbcUrl: $jdbcUrl")
             .replace("  username: template", "  username: $username")
             .replace("  password: template", "  password: $password")
-            .replace("  - zakadabar.template.backend.Module", "  - $packageName.backend.Module")
+            .replace("@packageName@", packageName)
+            .replace("@projectName@", projectName)
 
         Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 
@@ -200,14 +202,14 @@ abstract class CustomizeTask : DefaultTask() {
         val path = Paths.get(rootDir, "template/docker/docker-compose.yml")
         val content = Files.readString(path)
 
-        val username = if (sqlUsername.isBlank()) applicationName else sqlUsername
+        val username = if (sqlUsername.isBlank()) projectName else sqlUsername
         val password = if (sqlPassword.isBlank()) generatedPassword else sqlPassword
 
         val newContent = content
             .replace("POSTGRES_DB: template", "POSTGRES_DB: $dockerPostgresDb")
             .replace("POSTGRES_USER: template", "POSTGRES_USER: $username")
             .replace("POSTGRES_PASSWORD: template", "POSTGRES_PASSWORD: $password")
-            .replace("image: zakadabar-template", "image: $dockerImageName")
+            .replace("@dockerImageName@", dockerImageName)
 
         Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 

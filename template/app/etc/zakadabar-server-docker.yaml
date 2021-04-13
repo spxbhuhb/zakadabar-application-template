@@ -5,10 +5,10 @@ database:
   password: template
 
 traceRouting: false
-staticResources: /local/demo/var/static
+staticResources: /local/@projectName@/var/static
 
 modules:
-  - zakadabar.template.backend.Module
+  - @packageName@.backend.Module
 
 #ktor:
 #  port: 8080
