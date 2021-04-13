@@ -1,8 +1,8 @@
 database:
-  driverClassName: org.postgresql.Driver
-  jdbcUrl: jdbc:postgresql://localhost/template
-  username: template
-  password: template
+  driverClassName: @sqlDriver@
+  jdbcUrl: @sqlUrl@
+  username: @sqlUser@
+  password: @sqlPassword
 
 traceRouting: false
 staticResources: ./var/static

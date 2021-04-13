@@ -5,9 +5,9 @@ services:
   db:
     image: postgres:9.6.21
     environment:
-      POSTGRES_DB: template
-      POSTGRES_USER: template
-      POSTGRES_PASSWORD: template
+      POSTGRES_DB: @dockerSqlDb@
+      POSTGRES_USER: @dockerSqlUser@
+      POSTGRES_PASSWORD: @dockerSqlPassword@
     ports:
       - '25432:5432'
     restart: on-failure

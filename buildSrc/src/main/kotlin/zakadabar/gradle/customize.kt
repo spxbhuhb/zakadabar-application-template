@@ -12,39 +12,72 @@ import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 import java.util.*
 
+@Suppress("MemberVisibilityCanBePrivate")
+
 abstract class CustomizeTask : DefaultTask() {
 
-    @Input
-    var projectName: String = this.project.rootProject.name
+    private val mapping = mutableMapOf<String, String?>()
 
     @Input
-    var applicationTitle: String = this.project.rootProject.name.capitalize()
+    var projectName: String? = null
 
     @Input
-    var packageName: String = "zakadabar.template"
+    var applicationTitle: String? = null
 
     @Input
-    var rootDir: String = this.project.rootDir.absolutePath
+    var packageName: String? = null
+
+    @Input
+    var sqlDriver: String? = null
+
+    @Input
+    var sqlUrl: String? = null
+
+    @Input
+    var sqlDatabase: String? = null
+
+    @Input
+    var sqlUser: String? = null
+
+    @Input
+    var sqlPassword: String? = null
+
+    @Input
+    var dockerImageName: String? = null
+
+    @Input
+    var dockerSqlDb: String? = null
+
+    @Input
+    var dockerSqlUser: String? = null
+
+    @Input
+    var dockerSqlPassword: String? = null
+
+    init {
+        group = "zakadabar"
+
+        projectName = project.name
+        applicationTitle = project.name.capitalize()
+        packageName = null
+
+        sqlDriver = "org.postgresql.Driver"
+
+        sqlDatabase = project.name
+        sqlUser = "postgres"
+        sqlPassword = UUID.randomUUID().toString()
+
+        dockerImageName = project.name
+
+        dockerSqlDb = project.name
+        dockerSqlUser = "postgres"
+        dockerSqlPassword = sqlPassword
+    }
+
+    private var rootDir: String = this.project.rootDir.absolutePath
 
     private val packageDir: String
-        get() = packageName.replace(".", "/")
-
-    @Input
-    var sqlJdbcUrl = ""
-
-    @Input
-    var sqlUsername = ""
-
-    @Input
-    var sqlPassword = ""
-
-    private val generatedPassword = UUID.randomUUID().toString()
-
-    @Input
-    var dockerImageName = projectName
-
-    @Input
-    var dockerPostgresDb = projectName
+        get() = packageName !!.replace(".", "/")
 
     @TaskAction
     fun customizeProject() {
@@ -52,17 +85,33 @@ abstract class CustomizeTask : DefaultTask() {
             throw IllegalStateException("You have to change name of the project in settings.gradle.kts!")
         }
 
-        if (packageName == "zakadabar.template") {
+        if (packageName == null) {
             throw IllegalStateException("You have to change the base package name in the customize task in build.gradle.kts!")
         }
 
-        if (packageName.endsWith(".")) {
+        if (packageName !!.endsWith(".")) {
             throw IllegalArgumentException("The package name in gradle.properties must not end with a dot!")
         }
 
         if (! File(rootDir, "src/commonMain/kotlin/zakadabar/template").exists()) {
             throw IllegalArgumentException("Customization must not be run more than once!")
         }
+
+        mapping["projectName"] = projectName
+        mapping["applicationTitle"] = applicationTitle
+        mapping["packageName"] = packageName
+
+        mapping["sqlDriver"] = sqlDriver
+
+        mapping["sqlDatabase"] = sqlDatabase
+        mapping["sqlUser"] = sqlUser
+        mapping["sqlPassword"] = sqlPassword
+
+        mapping["dockerImageName"] = dockerImageName
+
+        mapping["dockerSqlDb"] = dockerSqlDb
+        mapping["dockerSqlUser"] = dockerSqlUser
+        mapping["dockerSqlPassword"] = dockerSqlPassword
 
         println("Customising: $projectName / $packageName")
 
@@ -74,13 +123,15 @@ abstract class CustomizeTask : DefaultTask() {
 
         index()
         strings()
-        yaml()
 
-        dockerYaml()
-        dockerCompose()
-        dockerFile()
+        if (sqlUrl == null) sqlUrl = "jdbc:postgresql://localhost/$sqlDatabase"
 
-        println("Customisation: DONE")
+        map("template/app/etc/zakadabar-server.yaml")
+        map("template/app/etc/zakadabar-server-docker.yaml")
+        map("template/docker/Dockerfile")
+        map("template/docker/docker-compose.yml")
+
+        println("Customisation: done")
     }
 
     private fun sourceSet(targetName: String) {
@@ -158,74 +209,19 @@ abstract class CustomizeTask : DefaultTask() {
         println("    application name: $path")
     }
 
-    private fun yaml() {
-        val path = Paths.get(rootDir, "template/app/etc/zakadabar-server.yaml")
-        val content = Files.readString(path)
+    private fun map(relPath: String) {
 
-        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://localhost/${projectName}" else sqlJdbcUrl
-        val username = if (sqlUsername.isBlank()) "template" else sqlUsername
-        val password = if (sqlPassword.isBlank()) "template" else sqlPassword
+        val path = Paths.get(rootDir, relPath)
 
-        val newContent = content
-            .replace("  jdbcUrl: jdbc:postgresql://localhost/template", "  jdbcUrl: $jdbcUrl")
-            .replace("  username: template", "  username: $username")
-            .replace("  password: template", "  password: $password")
-            .replace("@packageName@", packageName)
-            .replace("@projectName@", projectName)
+        var content = Files.readString(path)
 
-        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+        mapping.forEach {
+            val value = it.value ?: return@forEach
+            content = content.replace("@${it.key}@", value)
+        }
 
-        println("    application configuration: $path")
+        Files.write(path, content.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+
+        println("    map: $path")
     }
-
-    private fun dockerYaml() {
-        val path = Paths.get(rootDir, "template/app/etc/zakadabar-server-docker.yaml")
-        val content = Files.readString(path)
-
-        val jdbcUrl = if (sqlJdbcUrl.isBlank()) "jdbc:postgresql://db/${projectName}" else sqlJdbcUrl
-        val username = if (sqlUsername.isBlank()) projectName else sqlUsername
-        val password = if (sqlPassword.isBlank()) generatedPassword else sqlPassword
-
-        val newContent = content
-            .replace("  jdbcUrl: jdbc:postgresql://db/template", "  jdbcUrl: $jdbcUrl")
-            .replace("  username: template", "  username: $username")
-            .replace("  password: template", "  password: $password")
-            .replace("@packageName@", packageName)
-            .replace("@projectName@", projectName)
-
-        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
-
-        println("    application configuration: $path")
-    }
-
-    private fun dockerCompose() {
-        val path = Paths.get(rootDir, "template/docker/docker-compose.yml")
-        val content = Files.readString(path)
-
-        val username = if (sqlUsername.isBlank()) projectName else sqlUsername
-        val password = if (sqlPassword.isBlank()) generatedPassword else sqlPassword
-
-        val newContent = content
-            .replace("POSTGRES_DB: template", "POSTGRES_DB: $dockerPostgresDb")
-            .replace("POSTGRES_USER: template", "POSTGRES_USER: $username")
-            .replace("POSTGRES_PASSWORD: template", "POSTGRES_PASSWORD: $password")
-            .replace("@dockerImageName@", dockerImageName)
-
-        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
-
-        println("    docker compose: $path")
-    }
-
-    private fun dockerFile() {
-        val path = Paths.get(rootDir, "template/docker/Dockerfile")
-        val content = Files.readString(path)
-
-        val newContent = content
-            .replace("zakadabar-template", project.rootProject.name)
-
-        Files.write(path, newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
-
-        println("    dockerfile: $path")
-    }
-
 }

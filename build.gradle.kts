@@ -2,6 +2,8 @@
  * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import java.util.*
+
 plugins {
     kotlin("multiplatform") version "1.4.31"
     kotlin("plugin.serialization") version "1.4.31"
@@ -11,17 +13,43 @@ plugins {
     id("com.palantir.docker") version "0.25.0"
 }
 
+
+//    ↓ ↓ ↓ ↓   READ COMMENTS  ↓ ↓ ↓ ↓
+
+
+// -----------------------------------------------------------------------------
+// You don't have to modify anything above this
+// -----------------------------------------------------------------------------
+
+group = "my.application.group"
+version = "2021.4.12"
+
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
-    group = "zakadabar"
-    // applicationTitle = "Magic World"
-    packageName = "hu.simplexion.test"
-    // sqlJdbcUrl = "jdbc:postgresql://localhost:5432/${applicationName.toLowerCase()}"
-    // sqlUsername = "test"
-    // sqlPassword = "Almafa.12"
+
+    packageName = "my.package.name" // the package your code resides in
+
+    // ---- The following parameters are optional, values show defaults
+
+    applicationTitle = "My Application" // the title of your application, this is the title of the web pace
+
+    sqlDriver = "org.postgresql.Driver"
+
+    sqlDatabase = project.name
+    sqlUrl = "jdbc:postgresql://localhost/$sqlDatabase"
+    sqlUser = "postgres"
+    sqlPassword = UUID.randomUUID().toString()
+
+    dockerImageName = project.name
+
+    dockerSqlDb = project.name
+    dockerSqlUser = "postgres"
+    dockerSqlPassword = sqlPassword
+
 }
 
-group = "hu.simplexion.zakadabar"
-version = "2021.4.12"
+// -----------------------------------------------------------------------------
+// You don't have to modify anything below this
+// -----------------------------------------------------------------------------
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 

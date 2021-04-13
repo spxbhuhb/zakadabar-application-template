@@ -6,9 +6,7 @@ This repository contains an application template which you may use to start a ne
 
 1. Create a new repository from this template ([Use this template](https://github.com/spxbhuhb/zakadabar-application-template/generate) button).
 1. Check out the new repository with IDEA.
-1. Import the gradle project (one of these):
-    * click "Load Gradle Project" in the bottom-left corner bubble
-    * right click on `build.gradle.kts` in IDEA and then `Import Gradle Project`
+1. Right click on `build.gradle.kts` in IDEA and then click on `Import Gradle Project`
 1. Edit [settings.gradle.kts](settings.gradle.kts):
     1. Change project name.
 1. Edit [build.gradle.kts](build.gradle.kts)

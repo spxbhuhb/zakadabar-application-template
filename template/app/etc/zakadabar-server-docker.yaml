@@ -1,8 +1,8 @@
 database:
   driverClassName: org.postgresql.Driver
-  jdbcUrl: jdbc:postgresql://db/template
-  username: template
-  password: template
+  jdbcUrl: jdbc:postgresql://db/@dockerSqlDb@
+  username: @dockerSqlUser@
+  password: @dockerSqlPassword@
 
 traceRouting: false
 staticResources: /local/@projectName@/var/static
