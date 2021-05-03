@@ -10,7 +10,7 @@ import zakadabar.template.resources.Strings
 class Table : ZkTable<ExampleRecordDto>() {
 
     override fun onConfigure() {
-        title = Strings.exampleRecords
+        titleText = Strings.exampleRecords
         crud = ExampleRecords
 
         add = true

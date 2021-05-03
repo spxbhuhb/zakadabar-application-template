@@ -4,12 +4,11 @@
 @file:Suppress("unused") // main is called by webpack
 
 import kotlinx.browser.window
-import zakadabar.stack.data.builtin.account.SessionDto
-import zakadabar.stack.data.builtin.resources.StringsByLocale
+import zakadabar.stack.data.builtin.resources.TranslationsByLocale
 import zakadabar.stack.frontend.application.ZkApplication
-import zakadabar.stack.frontend.application.ZkExecutor
-import zakadabar.stack.frontend.builtin.ZkBuiltinTheme
 import zakadabar.stack.frontend.builtin.ZkElement
+import zakadabar.stack.frontend.builtin.theme.ZkBuiltinDarkTheme
+import zakadabar.stack.frontend.builtin.theme.ZkBuiltinLightTheme
 import zakadabar.stack.frontend.util.io
 import zakadabar.template.frontend.Routing
 import zakadabar.template.resources.Strings
@@ -20,17 +19,18 @@ fun main() {
 
         ZkElement.addKClass = true
 
-        val session = SessionDto.read(0L)
-
         with(ZkApplication) {
 
-            executor = ZkExecutor(session.account, session.anonymous, session.roles)
+            sessionManager.init()
 
-            theme = ZkBuiltinTheme()
+            themes += ZkBuiltinLightTheme()
+            themes += ZkBuiltinDarkTheme()
 
-            val locale = session.account.locale ?: window.navigator.language
+            theme = initTheme()
 
-            strings = Strings.merge(StringsByLocale(locale).execute())
+            val locale = executor.account.locale ?: window.navigator.language
+
+            strings = Strings.merge(TranslationsByLocale(locale).execute())
 
             routing = Routing
 

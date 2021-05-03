@@ -9,7 +9,9 @@ import io.ktor.routing.*
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import zakadabar.stack.backend.authorize
+import zakadabar.stack.backend.data.get
 import zakadabar.stack.backend.data.record.RecordBackend
+import zakadabar.stack.data.record.RecordId
 import zakadabar.stack.util.Executor
 import zakadabar.template.data.ExampleRecordDto
 
@@ -43,7 +45,7 @@ object ExampleRecordBackend : RecordBackend<ExampleRecordDto>() {
         }.toDto()
     }
 
-    override fun read(executor: Executor, recordId: Long) = transaction {
+    override fun read(executor: Executor, recordId: RecordId<ExampleRecordDto>) = transaction {
 
         authorize(true)
 
@@ -59,7 +61,7 @@ object ExampleRecordBackend : RecordBackend<ExampleRecordDto>() {
         dao.toDto()
     }
 
-    override fun delete(executor: Executor, recordId: Long) = transaction {
+    override fun delete(executor: Executor, recordId: RecordId<ExampleRecordDto>) = transaction {
 
         authorize(true)
 

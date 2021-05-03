@@ -15,7 +15,6 @@ import zakadabar.stack.resources.ZkBuiltinStrings
 internal var Strings = AppStrings()
 
 class AppStrings : ZkBuiltinStrings() {
-    val applicationName by "template"
+    override val applicationName by "template"
     val exampleRecords by "exampleRecords"
-    val basics by "basics"
 }

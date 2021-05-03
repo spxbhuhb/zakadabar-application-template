@@ -3,18 +3,25 @@
  */
 package zakadabar.template.frontend
 
-import zakadabar.stack.frontend.application.ZkAppLayout
-import zakadabar.stack.frontend.builtin.layout.ZkLayoutStyles
-import zakadabar.stack.frontend.util.plusAssign
+import zakadabar.stack.frontend.builtin.layout.ZkDefaultLayout
+import zakadabar.stack.frontend.builtin.theme.ZkBuiltinDarkTheme
+import zakadabar.stack.frontend.builtin.titlebar.ZkAppHandle
+import zakadabar.stack.frontend.builtin.titlebar.ZkAppTitleBar
+import zakadabar.stack.frontend.builtin.titlebar.actions.DarkLightMode
+import zakadabar.template.frontend.pages.Home
+import zakadabar.template.resources.Strings
 
-object DefaultLayout : ZkAppLayout("default") {
+object DefaultLayout : ZkDefaultLayout() {
 
     override fun onCreate() {
-        classList += ZkLayoutStyles.h100
-        classList += ZkLayoutStyles.row
+        super.onCreate()
 
-        + SideBar
-        + content css ZkLayoutStyles.layoutContent
+        appHandle = ZkAppHandle(zke { + Strings.applicationName }, onIconClick = ::onToggleSideBar, onTextClick = { Home.open() })
+        sideBar = SideBar
+        titleBar = ZkAppTitleBar(::onToggleSideBar)
+
+        titleBar.globalElements += DarkLightMode(ZkBuiltinDarkTheme.NAME, ZkBuiltinDarkTheme.NAME)
+
     }
 
 }
