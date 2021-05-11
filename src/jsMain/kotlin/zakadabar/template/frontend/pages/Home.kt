@@ -5,12 +5,12 @@ package zakadabar.template.frontend.pages
 
 import zakadabar.stack.frontend.builtin.pages.ZkPage
 import zakadabar.stack.frontend.util.plusAssign
-import zakadabar.template.frontend.AppStyles
+import zakadabar.template.frontend.appStyles
 
 object Home : ZkPage() {
 
     override fun onCreate() {
-        classList += AppStyles.page
+        classList += appStyles.page
 
         + "This is the home page of your application."
     }

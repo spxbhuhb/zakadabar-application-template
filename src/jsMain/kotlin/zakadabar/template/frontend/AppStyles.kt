@@ -5,15 +5,15 @@ package zakadabar.template.frontend
 
 import zakadabar.stack.frontend.resources.ZkTheme
 import zakadabar.stack.frontend.resources.css.ZkCssStyleSheet
+import zakadabar.stack.frontend.resources.css.cssStyleSheet
 
-object AppStyles : ZkCssStyleSheet<ZkTheme>() {
+val appStyles by cssStyleSheet(AppStyles())
+
+class AppStyles() : ZkCssStyleSheet<ZkTheme>() {
 
     val page by cssClass {
         overflowY = "scroll"
         padding = 20
     }
 
-    init {
-        attach()
-    }
 }
