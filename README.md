@@ -32,7 +32,7 @@ At this point you have the source code of a fully functioning application.
 
 You can use an existing database server or start a new one in docker.
 
-Whichever your choice is, modify [zakadabar-server.yaml](template/app/etc/zakadabar-server.yaml) to contain the actual database access URL and credentials.
+Whichever your choice is, modify [zakadabar.stack.server.yaml](template/app/etc/zakadabar.stack.server.yaml) to contain the actual database access URL and credentials.
 
 1. `gradle run`
 1. `gradle jsBrowserRun`
