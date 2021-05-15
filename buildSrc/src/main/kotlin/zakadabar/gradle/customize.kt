@@ -19,47 +19,57 @@ abstract class CustomizeTask : DefaultTask() {
     private val mapping = mutableMapOf<String, String?>()
 
     @Input
-    var projectName: String? = null
+    var projectName: String?
 
     @Input
-    var applicationTitle: String? = null
+    var packageName: String?
 
     @Input
-    var packageName: String? = null
+    var applicationTitle: String?
 
     @Input
-    var sqlDriver: String? = null
+    var defaultLocale: String?
+
+    @Input
+    var copyright: String
+
+    @Input
+    var sqlDriver: String?
 
     @Input
     var sqlUrl: String? = null
 
     @Input
-    var sqlDatabase: String? = null
+    var sqlDatabase: String?
 
     @Input
-    var sqlUser: String? = null
+    var sqlUser: String?
 
     @Input
-    var sqlPassword: String? = null
+    var sqlPassword: String?
 
     @Input
-    var dockerImageName: String? = null
+    var dockerImageName: String?
 
     @Input
-    var dockerSqlDb: String? = null
+    var dockerSqlDb: String?
 
     @Input
-    var dockerSqlUser: String? = null
+    var dockerSqlUser: String?
 
     @Input
-    var dockerSqlPassword: String? = null
+    var dockerSqlPassword: String?
 
     init {
         group = "zakadabar"
 
         projectName = project.name
-        applicationTitle = project.name.capitalize()
         packageName = null
+
+        applicationTitle = project.name.capitalize()
+
+        defaultLocale = "en"
+        copyright = "Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license."
 
         sqlDriver = "org.postgresql.Driver"
 
@@ -98,8 +108,11 @@ abstract class CustomizeTask : DefaultTask() {
         }
 
         mapping["projectName"] = projectName
-        mapping["applicationTitle"] = applicationTitle
         mapping["packageName"] = packageName
+
+        mapping["applicationTitle"] = applicationTitle
+
+        mapping["defaultLocale"] = defaultLocale
 
         mapping["sqlDriver"] = sqlDriver
 
@@ -114,6 +127,8 @@ abstract class CustomizeTask : DefaultTask() {
         mapping["dockerSqlUser"] = dockerSqlUser
         mapping["dockerSqlPassword"] = dockerSqlPassword
 
+        mapping["copyright"] = copyright
+
         println("Customising: $projectName / $packageName")
 
         sourceSet("commonMain")
@@ -127,6 +142,7 @@ abstract class CustomizeTask : DefaultTask() {
 
         map("template/app/etc/zakadabar.stack.server.yaml")
         map("template/app/etc/zakadabar.stack.server-docker.yaml")
+        map("template/app/etc/zakadabar.server.description.yaml")
         map("template/docker/Dockerfile")
         map("template/docker/docker-compose.yml")
 
@@ -136,8 +152,8 @@ abstract class CustomizeTask : DefaultTask() {
     private fun sourceSet(targetName: String) {
         mkdir("src/$targetName/kotlin/$packageDir")
         moveAll("src/$targetName/kotlin/zakadabar/template", "src/$targetName/kotlin/$packageDir")
-        mkdir("trash/$targetName")
-        trash(targetName, "src/$targetName/kotlin/zakadabar")
+        delete("src/$targetName/kotlin/zakadabar/template")
+        delete("src/$targetName/kotlin/zakadabar/")
     }
 
     private fun mkdir(dirs: String) {
@@ -155,13 +171,14 @@ abstract class CustomizeTask : DefaultTask() {
         }
     }
 
-    private fun trash(target: String, dir: String) {
-        val fromPath = Paths.get(rootDir, dir)
-        val targetPath = Paths.get(rootDir, "trash/$target")
-        val toPath = targetPath.resolve(fromPath.fileName)
-        Files.createDirectories(targetPath)
-        Files.move(fromPath, toPath)
-        println("    trash: $fromPath  >  $toPath")
+    private fun delete(target: String) {
+        val path = Paths.get(rootDir, target)
+        if (Files.list(path).count() == 0L) {
+            logger.warn("Directory $path is not empty, skipping delete.")
+            return
+        }
+        Files.delete(path)
+        println("    delete: $path")
     }
 
     private fun packageNames() {
@@ -170,11 +187,11 @@ abstract class CustomizeTask : DefaultTask() {
             if (! it.name.endsWith(".kt")) return@forEach
 
             val content = Files.readString(it.toPath())
-            if ("zakadabar.template" !in content) return@forEach
 
             val newContent = content
                 .replace("package zakadabar.template", "package $packageName")
                 .replace("import zakadabar.template", "import $packageName")
+                .replace("@copyright@", copyright)
 
             Files.write(it.toPath(), newContent.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 

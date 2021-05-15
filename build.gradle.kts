@@ -22,7 +22,7 @@ plugins {
 // -----------------------------------------------------------------------------
 
 group = "my.application.group"
-version = "2021.5.11"
+version = "2021.5.18"
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
@@ -31,6 +31,8 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
     // ---- The following parameters are optional, values show defaults
 
     applicationTitle = "My Application" // the title of your application, this is the title of the web pace
+    copyright = "Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license."
+    defaultLocale = "en"
 
     sqlDriver = "org.postgresql.Driver"
 
@@ -53,7 +55,7 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 
-val stackVersion by extra { "2021.5.11" }
+val stackVersion by extra { "2021.5.18-SNAPSHOT" }
 val datetimeVersion = "0.1.0"
 
 repositories {

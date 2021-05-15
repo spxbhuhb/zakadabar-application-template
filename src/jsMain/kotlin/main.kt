@@ -1,40 +1,39 @@
 /*
- * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * @copyright@
  */
 @file:Suppress("unused") // main is called by webpack
 
-import kotlinx.browser.window
-import zakadabar.stack.data.builtin.resources.TranslationsByLocale
 import zakadabar.stack.frontend.application.ZkApplication
+import zakadabar.stack.frontend.application.application
 import zakadabar.stack.frontend.builtin.ZkElement
-import zakadabar.stack.frontend.builtin.theme.ZkBuiltinDarkTheme
 import zakadabar.stack.frontend.builtin.theme.ZkBuiltinLightTheme
+import zakadabar.stack.frontend.resources.css.ZkCssStyleSheet
+import zakadabar.stack.frontend.resources.initTheme
 import zakadabar.stack.frontend.util.io
 import zakadabar.template.frontend.Routing
-import zakadabar.template.resources.Strings
+import zakadabar.template.resources.AppStrings
 
 fun main() {
 
+    ZkElement.addKClass = false
+    ZkCssStyleSheet.shortNames = true
+
+    application = ZkApplication()
+
     io {
 
-        ZkElement.addKClass = true
+        with(application) {
 
-        with(ZkApplication) {
+            initSession()
 
-            sessionManager.init()
+            initTheme(ZkBuiltinLightTheme(), ZkBuiltinLightTheme())
 
-            themes += ZkBuiltinLightTheme()
-            themes += ZkBuiltinDarkTheme()
+            initLocale(AppStrings())
 
-            theme = initTheme()
+            initRouting(Routing())
 
-            val locale = executor.account.locale ?: window.navigator.language
+            run()
 
-            strings = Strings.merge(TranslationsByLocale(locale).execute())
-
-            routing = Routing
-
-            init()
         }
 
     }
