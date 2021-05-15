@@ -12,4 +12,6 @@ internal var strings = AppStrings()
 class AppStrings : ZkBuiltinStrings() {
     override val applicationName by "template"
     val exampleRecords by "exampleRecords"
+    val accountName by "Account Name"
+    val password by "Password"
 }
