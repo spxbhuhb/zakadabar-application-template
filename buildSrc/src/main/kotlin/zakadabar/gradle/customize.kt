@@ -173,7 +173,7 @@ abstract class CustomizeTask : DefaultTask() {
 
     private fun delete(target: String) {
         val path = Paths.get(rootDir, target)
-        if (Files.list(path).count() == 0L) {
+        if (Files.list(path).count() != 0L) {
             logger.warn("Directory $path is not empty, skipping delete.")
             return
         }
