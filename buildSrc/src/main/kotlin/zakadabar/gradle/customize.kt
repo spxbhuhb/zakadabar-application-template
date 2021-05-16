@@ -145,6 +145,7 @@ abstract class CustomizeTask : DefaultTask() {
         map("template/app/etc/zakadabar.server.description.yaml")
         map("template/docker/Dockerfile")
         map("template/docker/docker-compose.yml")
+        map("build.gradle.kts")
 
         println("Customisation: done")
     }
