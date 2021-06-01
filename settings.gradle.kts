@@ -1,4 +1,4 @@
-rootProject.name = "my-app"
+rootProject.name = "zakadabar-application-template"
 
 pluginManagement {
     repositories {
