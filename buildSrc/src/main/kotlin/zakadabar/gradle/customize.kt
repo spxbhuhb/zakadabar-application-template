@@ -132,8 +132,8 @@ abstract class CustomizeTask : DefaultTask() {
         index()
         strings()
 
-        map("template/app/etc/zakadabar.stack.server.yaml")
-        map("template/app/etc/zakadabar.stack.server-docker.yaml")
+        map("template/app/etc/stack.server.yaml")
+        map("template/app/etc/stack.server-docker.yaml")
         map("template/docker/Dockerfile")
         map("template/docker/docker-compose.yml")
 
