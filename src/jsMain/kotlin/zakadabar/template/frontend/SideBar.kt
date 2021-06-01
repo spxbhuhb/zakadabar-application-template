@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * @copyright@
  */
 package zakadabar.template.frontend
 
@@ -18,7 +18,7 @@ import zakadabar.stack.frontend.util.io
 import zakadabar.template.frontend.pages.ExampleEntityCrud
 import zakadabar.template.resources.strings
 
-object SideBar : ZkSideBar() {
+class SideBar : ZkSideBar() {
 
     override fun onCreate() {
         super.onCreate()

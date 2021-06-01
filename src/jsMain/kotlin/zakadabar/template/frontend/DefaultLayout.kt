@@ -15,8 +15,8 @@ object DefaultLayout : ZkDefaultLayout() {
     override fun onCreate() {
         super.onCreate()
 
-        appHandle = ZkAppHandle(zke { + strings.applicationName }, onIconClick = ::onToggleSideBar, target = Home})
-        sideBar = SideBar
+        appHandle = ZkAppHandle(zke { + strings.applicationName }, onIconClick = ::onToggleSideBar, target = Home)
+        sideBar = SideBar()
         titleBar = ZkAppTitleBar(::onToggleSideBar)
 
         titleBar.globalElements += HeaderActions()
