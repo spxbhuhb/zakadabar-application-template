@@ -96,6 +96,10 @@ kotlin {
         implementation("hu.simplexion.zakadabar:blobs:$stackVersion")
         implementation("hu.simplexion.zakadabar:i18n:$stackVersion")
     }
+
+    sourceSets["jvmMain"].dependencies {
+        implementation("com.h2database:h2:1.4.200")
+    }
 }
 
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
