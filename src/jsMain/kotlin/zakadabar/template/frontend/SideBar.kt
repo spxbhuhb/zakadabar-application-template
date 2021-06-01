@@ -3,54 +3,46 @@
  */
 package zakadabar.template.frontend
 
-import hu.simplexion.rf.leltar.frontend.pages.roles.Roles
 import kotlinx.browser.window
+import zakadabar.lib.accounts.data.LogoutAction
+import zakadabar.lib.accounts.frontend.accounts.Account
+import zakadabar.lib.accounts.frontend.accounts.Accounts
+import zakadabar.lib.accounts.frontend.login.Login
+import zakadabar.lib.accounts.frontend.roles.Roles
+import zakadabar.lib.i18n.frontend.Locales
+import zakadabar.lib.i18n.frontend.Translations
 import zakadabar.stack.StackRoles
-import zakadabar.stack.data.builtin.account.LogoutAction
-import zakadabar.stack.frontend.application.ZkApplication
-import zakadabar.stack.frontend.builtin.pages.account.accounts.Accounts
-import zakadabar.stack.frontend.builtin.pages.account.login.Login
-import zakadabar.stack.frontend.builtin.pages.resources.locales.Locales
-import zakadabar.stack.frontend.builtin.pages.resources.settings.Settings
-import zakadabar.stack.frontend.builtin.pages.resources.translations.Translations
+import zakadabar.stack.frontend.application.translate
 import zakadabar.stack.frontend.builtin.sidebar.ZkSideBar
 import zakadabar.stack.frontend.util.io
-import zakadabar.template.frontend.pages.exampleRecord.ExampleRecords
-import zakadabar.template.resources.Strings
+import zakadabar.template.frontend.pages.ExampleEntityCrud
+import zakadabar.template.resources.strings
 
 object SideBar : ZkSideBar() {
 
     override fun onCreate() {
         super.onCreate()
 
-        + item(Strings.exampleRecords) { ExampleRecords.openAll() }
+        + item<ExampleEntityCrud>()
 
-        withOneOfRoles(StackRoles.securityOfficer, StackRoles.siteAdmin) {
+        ifAnonymous {
+            + item<Login>()
+        }
 
-            + group(Strings.administration) {
-
-                + item(Strings.settings) { Settings.openAll() }
-
-                withRole(StackRoles.siteAdmin) {
-                    + item(Strings.locales) { Locales.openAll() }
-                    + item(Strings.translations) { Translations.openAll() }
-                }
-
-                withRole(StackRoles.securityOfficer) {
-                    + item(Strings.accounts) { Accounts.openAll() }
-                    + item(Strings.roles) { Roles.openAll() }
-                }
-
+        withRole(StackRoles.securityOfficer) {
+            + group(translate<Accounts>()) {
+                + item<Accounts>()
+                + item<Roles>()
+            }
+            + group(translate<Translations>()) {
+                + item<Locales>()
+                + item<Translations>()
             }
         }
 
-        ifAnonymous {
-            + item(Strings.login) { Login.open() }
-        }
-
         ifNotAnonymous {
-            + item(Strings.account) { Accounts.openUpdate(ZkApplication.executor.account.id) }
-            + item(Strings.logout) {
+            + item<Account>()
+            + item(strings.logout) {
                 io {
                     LogoutAction().execute()
                     window.location.href = "/"

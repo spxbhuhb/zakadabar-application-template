@@ -22,7 +22,7 @@ plugins {
 // -----------------------------------------------------------------------------
 
 group = "my.application.group"
-version = "2021.5.11"
+version = "2021.6.1"
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
@@ -32,16 +32,17 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
     applicationTitle = "My Application" // the title of your application, this is the title of the web pace
 
-    sqlDriver = "org.postgresql.Driver"
-
+    sqlDriver = "org.h2.Driver"
     sqlDatabase = project.name
-    sqlUrl = "jdbc:postgresql://localhost/$sqlDatabase"
-    sqlUser = "postgres"
+    sqlUrl = "jdbc:h2:./app/var/$sqlDatabase"
+    sqlUser = "local"
     sqlPassword = UUID.randomUUID().toString()
 
     dockerImageName = project.name
 
-    dockerSqlDb = project.name
+    dockerSqlDriver = "org.postgresql.Driver"
+    dockerSqlDatabase = project.name
+    dockerSqlUrl = "jdbc:postgresql://localhost/$sqlDatabase"
     dockerSqlUser = "postgres"
     dockerSqlPassword = sqlPassword
 
@@ -53,8 +54,8 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 
-val stackVersion by extra { "2021.5.11" }
-val datetimeVersion = "0.1.0"
+val stackVersion by extra { "2021.6.1" }
+val datetimeVersion = "0.2.0"
 
 repositories {
     mavenCentral()
@@ -89,12 +90,28 @@ kotlin {
 
     sourceSets["commonMain"].dependencies {
         implementation("hu.simplexion.zakadabar:core:$stackVersion")
+        implementation("hu.simplexion.zakadabar:accounts:$stackVersion")
+        implementation("hu.simplexion.zakadabar:blobs:$stackVersion")
+        implementation("hu.simplexion.zakadabar:i18n:$stackVersion")
     }
 }
 
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     // seems like this does not work - minimize()
 }
+
+val syncBuildInfo by tasks.registering(Sync::class) {
+    from("$projectDir/template/zkBuild")
+    inputs.property("version", project.version)
+    filter { line: String ->
+        line.replace("@version@", "${project.version}")
+            .replace("@projectName@", project.name)
+            .replace("@stackVersion@", stackVersion)
+    }
+    into("$projectDir/src/jvmMain/resources")
+}
+
+tasks["compileKotlinJvm"].dependsOn(syncBuildInfo)
 
 val distDir = "$buildDir/app/${project.name}-$version-server"
 

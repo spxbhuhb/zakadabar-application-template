@@ -46,7 +46,13 @@ abstract class CustomizeTask : DefaultTask() {
     var dockerImageName: String? = null
 
     @Input
-    var dockerSqlDb: String? = null
+    var dockerSqlDriver: String? = null
+
+    @Input
+    var dockerSqlUrl: String? = null
+
+    @Input
+    var dockerSqlDatabase: String? = null
 
     @Input
     var dockerSqlUser: String? = null
@@ -61,15 +67,15 @@ abstract class CustomizeTask : DefaultTask() {
         applicationTitle = project.name.capitalize()
         packageName = null
 
-        sqlDriver = "org.postgresql.Driver"
-
+        sqlDriver = "org.h2.Driver"
         sqlDatabase = project.name
-        sqlUser = "postgres"
+        sqlUser = "local"
         sqlPassword = UUID.randomUUID().toString()
 
         dockerImageName = project.name
 
-        dockerSqlDb = project.name
+        dockerSqlDriver = "org.postgresql.Driver"
+        dockerSqlDatabase = project.name
         dockerSqlUser = "postgres"
         dockerSqlPassword = sqlPassword
     }
@@ -102,15 +108,16 @@ abstract class CustomizeTask : DefaultTask() {
         mapping["packageName"] = packageName
 
         mapping["sqlDriver"] = sqlDriver
-
         mapping["sqlDatabase"] = sqlDatabase
-        mapping["sqlUrl"] = sqlUrl ?: "jdbc:postgresql://localhost/$sqlDatabase"
+        mapping["sqlUrl"] = sqlUrl ?: "jdbc:h2:./app/var/$sqlDatabase"
         mapping["sqlUser"] = sqlUser
         mapping["sqlPassword"] = sqlPassword
 
         mapping["dockerImageName"] = dockerImageName
 
-        mapping["dockerSqlDb"] = dockerSqlDb
+        mapping["dockerSqlDriver"] = dockerSqlDriver
+        mapping["dockerSqlDatabase"] = dockerSqlDatabase
+        mapping["dockerSqlUrl"] = dockerSqlUrl ?: "jdbc:postgresql://localhost/$sqlDatabase"
         mapping["dockerSqlUser"] = dockerSqlUser
         mapping["dockerSqlPassword"] = dockerSqlPassword
 

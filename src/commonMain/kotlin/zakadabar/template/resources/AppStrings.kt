@@ -12,9 +12,9 @@ import zakadabar.stack.resources.ZkBuiltinStrings
 // In that case - or when you write an actual component library - you want to your
 // strings to be customizable.
 
-internal var Strings = AppStrings()
+internal var strings = AppStrings()
 
 class AppStrings : ZkBuiltinStrings() {
     override val applicationName by "template"
-    val exampleRecords by "exampleRecords"
+    val exampleEntityCrud by "Example Entities"
 }

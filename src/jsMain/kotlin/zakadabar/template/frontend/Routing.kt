@@ -5,14 +5,14 @@
 package zakadabar.template.frontend
 
 import zakadabar.stack.frontend.application.ZkAppRouting
+import zakadabar.template.frontend.pages.ExampleEntityCrud
 import zakadabar.template.frontend.pages.Home
-import zakadabar.template.frontend.pages.exampleRecord.ExampleRecords
 
-object Routing : ZkAppRouting(DefaultLayout, Home) {
+class Routing : ZkAppRouting(DefaultLayout, Home) {
 
     init {
         + Home
-        + ExampleRecords
+        + ExampleEntityCrud()
     }
 
 }
