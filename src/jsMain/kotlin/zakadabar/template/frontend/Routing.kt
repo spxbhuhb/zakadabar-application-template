@@ -11,8 +11,10 @@ import zakadabar.template.frontend.pages.Home
 class Routing : ZkAppRouting(DefaultLayout, Home) {
 
     init {
+        zakadabar.lib.accounts.frontend.install(this)
+        zakadabar.lib.i18n.frontend.install(this)
         + Home
         + ExampleEntityCrud()
-    }
+   }
 
 }
