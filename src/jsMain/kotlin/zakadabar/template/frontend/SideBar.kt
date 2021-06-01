@@ -23,10 +23,12 @@ class SideBar : ZkSideBar() {
     override fun onCreate() {
         super.onCreate()
 
-        + item<ExampleEntityCrud>()
-
         ifAnonymous {
             + item<Login>()
+        }
+
+        ifNotAnonymous {
+            + item<ExampleEntityCrud>()
         }
 
         withRole(StackRoles.securityOfficer) {
