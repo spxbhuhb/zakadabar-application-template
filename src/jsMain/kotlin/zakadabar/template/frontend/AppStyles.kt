@@ -10,9 +10,4 @@ val appStyles by cssStyleSheet(AppStyles())
 
 class AppStyles : ZkCssStyleSheet() {
 
-    val page by cssClass {
-        overflowY = "scroll"
-        padding = 20
-    }
-
 }

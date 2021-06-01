@@ -2,9 +2,12 @@
 
 This repository contains an application template which you may use to start a new application project based on [Zakadabar](https://github.com/spxbhuhb/zakadabar-stack).
 
-## Usage
+## Create 
 
 1. Create a new repository from this template ([Use this template](https://github.com/spxbhuhb/zakadabar-application-template/generate) button).
+
+## Customize
+
 1. Check out the new repository with IDEA.
 1. Right click on `build.gradle.kts` in IDEA and then click on `Import Gradle Project`
 1. Edit [settings.gradle.kts](settings.gradle.kts):
@@ -16,11 +19,10 @@ This repository contains an application template which you may use to start a ne
         1. any other parameters you want to change.
 1. Refresh gradle config in IDEA.
 1. `gradle zkCustomise`
-1. Check the `trash` directory: if nothing important is there (shouldn't be), delete it.
 
 At this point you have the source code of a fully functioning application.
 
-### Build Distributable Packages
+## Build Distributable Packages
 
 1. `gradle zkDocker`
 1. In the `build/app` directory you will find:
@@ -28,7 +30,7 @@ At this point you have the source code of a fully functioning application.
     * the content of the zip file extracted
     * a docker compose file which contains a PostgreSQL server and your application
 
-### Run During Development
+## Run During Development
 
 You can use an existing database server or start a new one in docker.
 

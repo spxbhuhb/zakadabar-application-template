@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * @copyright@
  */
 
 import java.util.*
@@ -31,6 +31,8 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
     // ---- The following parameters are optional, values show defaults
 
     applicationTitle = "My Application" // the title of your application, this is the title of the web pace
+    copyright = "Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license."
+    defaultLocale = "en"
 
     sqlDriver = "org.h2.Driver"
     sqlDatabase = project.name
