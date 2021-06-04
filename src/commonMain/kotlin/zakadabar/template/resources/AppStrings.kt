@@ -17,4 +17,15 @@ internal var strings = AppStrings()
 class AppStrings : ZkBuiltinStrings() {
     override val applicationName by "template"
     val exampleEntityCrud by "Example Entities"
+
+    // these will most likely change a bit with the first release of July 2021
+
+    val accountName by "Account Name"
+    val email by "E-mail"
+    val phone by "Phone"
+    val locked by "Locked"
+    val lastLoginSuccess by "Last Login Success"
+    val lastLoginFail by "Last Login Fail"
+    val description by "Description"
+    override val loginFailCount by "Login Fail Count"
 }

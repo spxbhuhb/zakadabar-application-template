@@ -15,6 +15,10 @@ if (config.devServer) {
                 target: 'http://localhost:8080',
                 secure: 'false'
             }
+        },
+        historyApiFallback: {
+            index: 'index.html',
+            disableDotRule: true
         }
     }
 }
