@@ -5,7 +5,7 @@ services:
   db:
     image: postgres:9.6.21
     environment:
-      POSTGRES_DB: @dockerSqlDb@
+      POSTGRES_DB: @dockerSqlDatabase@
       POSTGRES_USER: @dockerSqlUser@
       POSTGRES_PASSWORD: @dockerSqlPassword@
     ports:

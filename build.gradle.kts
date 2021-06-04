@@ -35,7 +35,7 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
     defaultLocale = "en"
 
     sqlDriver = "org.h2.Driver"
-    sqlDatabase = project.name
+    sqlDatabase = "db"
     sqlUrl = "jdbc:h2:./app/var/$sqlDatabase"
     sqlUser = "local"
     sqlPassword = UUID.randomUUID().toString()
@@ -43,8 +43,8 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
     dockerImageName = project.name
 
     dockerSqlDriver = "org.postgresql.Driver"
-    dockerSqlDatabase = project.name
-    dockerSqlUrl = "jdbc:postgresql://localhost/$sqlDatabase"
+    dockerSqlDatabase = "db"
+    dockerSqlUrl = "jdbc:postgresql://db/$dockerSqlDatabase"
     dockerSqlUser = "postgres"
     dockerSqlPassword = sqlPassword
 

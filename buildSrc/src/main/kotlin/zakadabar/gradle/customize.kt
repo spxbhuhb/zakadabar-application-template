@@ -130,7 +130,7 @@ abstract class CustomizeTask : DefaultTask() {
 
         mapping["dockerSqlDriver"] = dockerSqlDriver
         mapping["dockerSqlDatabase"] = dockerSqlDatabase
-        mapping["dockerSqlUrl"] = dockerSqlUrl ?: "jdbc:postgresql://localhost/$sqlDatabase"
+        mapping["dockerSqlUrl"] = dockerSqlUrl ?: "jdbc:postgresql://db/$dockerSqlDatabase"
         mapping["dockerSqlUser"] = dockerSqlUser
         mapping["dockerSqlPassword"] = dockerSqlPassword
 

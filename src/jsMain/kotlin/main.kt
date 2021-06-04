@@ -8,8 +8,8 @@ import zakadabar.stack.frontend.application.application
 import zakadabar.stack.frontend.resources.initTheme
 import zakadabar.stack.frontend.util.io
 import zakadabar.template.frontend.Routing
-import zakadabar.template.frontend.resources.AppDarkTheme
-import zakadabar.template.frontend.resources.AppLightTheme
+import zakadabar.template.frontend.browser.resources.AppDarkTheme
+import zakadabar.template.frontend.browser.resources.AppLightTheme
 import zakadabar.template.resources.strings
 
 fun main() {
