@@ -9,7 +9,7 @@ This repository contains an application template which you may use to start a ne
 ## Customize
 
 1. Check out the new repository with IDEA.
-1. Right click on `build.gradle.kts` in IDEA and then click on `Import Gradle Project`
+1. (Optional, if you use old IDEA) Right click on `build.gradle.kts` in IDEA and then click on `Import Gradle Project`
 1. Edit [settings.gradle.kts](settings.gradle.kts):
     1. Change project name.
 1. Edit [build.gradle.kts](build.gradle.kts)
