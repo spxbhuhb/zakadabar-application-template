@@ -5,9 +5,9 @@
 import java.util.*
 
 plugins {
-    kotlin("multiplatform") version "1.4.31"
-    kotlin("plugin.serialization") version "1.4.31"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.31"
+    kotlin("multiplatform") version "1.5.0"
+    kotlin("plugin.serialization") version "1.5.0"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.5.0"
     id("com.github.johnrengelman.shadow") version "6.0.0"
     application
     id("com.palantir.docker") version "0.25.0"
