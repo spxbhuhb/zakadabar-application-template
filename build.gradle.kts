@@ -22,7 +22,7 @@ plugins {
 // -----------------------------------------------------------------------------
 
 group = "my.application.group"
-version = "2021.6.4"
+version = "2021.6.7"
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
@@ -56,7 +56,7 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 
-val stackVersion by extra { "2021.6.4" }
+val stackVersion by extra { "2021.6.7" }
 val datetimeVersion = "0.2.0"
 
 repositories {
