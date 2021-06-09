@@ -124,3 +124,4 @@ gradlew.bat
 */target
 /build
 **/build
+/.idea/libraries-with-intellij-classes.xml

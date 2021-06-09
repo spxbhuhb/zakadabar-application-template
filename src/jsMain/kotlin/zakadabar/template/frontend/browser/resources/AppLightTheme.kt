@@ -1,14 +1,14 @@
 /*
  * @copyright@
  */
-package zakadabar.template.frontend.resources
+package zakadabar.template.frontend.browser.resources
 
-import zakadabar.stack.frontend.builtin.theme.ZkBuiltinDarkTheme
+import zakadabar.stack.frontend.builtin.theme.ZkBuiltinLightTheme
 
-class AppDarkTheme : ZkBuiltinDarkTheme() {
+class AppLightTheme : ZkBuiltinLightTheme() {
 
     companion object {
-        const val NAME = "app-dark"
+        const val NAME = "app-light"
     }
 
     override val name = NAME
@@ -30,4 +30,5 @@ class AppDarkTheme : ZkBuiltinDarkTheme() {
 //            appHandleBackground = "green"
 //        }
 //    }
+
 }

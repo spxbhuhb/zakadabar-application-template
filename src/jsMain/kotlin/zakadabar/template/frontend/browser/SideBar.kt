@@ -1,7 +1,7 @@
 /*
- * @copyright@
+ * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package zakadabar.template.frontend
+package zakadabar.template.frontend.browser
 
 import kotlinx.browser.window
 import zakadabar.lib.accounts.data.LogoutAction
@@ -15,7 +15,7 @@ import zakadabar.stack.StackRoles
 import zakadabar.stack.frontend.application.translate
 import zakadabar.stack.frontend.builtin.sidebar.ZkSideBar
 import zakadabar.stack.frontend.util.io
-import zakadabar.template.frontend.pages.ExampleEntityCrud
+import zakadabar.template.frontend.browser.pages.ExampleEntityCrud
 import zakadabar.template.resources.strings
 
 class SideBar : ZkSideBar() {

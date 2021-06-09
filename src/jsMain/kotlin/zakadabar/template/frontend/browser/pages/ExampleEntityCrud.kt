@@ -1,7 +1,7 @@
 /*
  * @copyright@
  */
-package zakadabar.template.frontend.pages
+package zakadabar.template.frontend.browser.pages
 
 import zakadabar.stack.frontend.application.target
 import zakadabar.stack.frontend.application.translate

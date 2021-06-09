@@ -1,7 +1,7 @@
 /*
  * @copyright@
  */
-package zakadabar.template.frontend.resources
+package zakadabar.template.frontend.browser.resources
 
 import zakadabar.stack.frontend.resources.css.ZkCssStyleSheet
 import zakadabar.stack.frontend.resources.css.cssStyleSheet
