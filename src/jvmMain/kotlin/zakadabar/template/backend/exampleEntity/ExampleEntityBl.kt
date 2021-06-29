@@ -4,7 +4,6 @@
 package zakadabar.template.backend.exampleEntity
 
 import zakadabar.stack.backend.authorize.Authorizer
-import zakadabar.stack.backend.authorize.EmptyAuthorizer
 import zakadabar.stack.backend.business.EntityBusinessLogicBase
 import zakadabar.template.data.ExampleEntityBo
 
@@ -19,6 +18,6 @@ open class ExampleEntityBl : EntityBusinessLogicBase<ExampleEntityBo>(
 
     override val pa = ExampleEntityExposedPaGen()
 
-    override val authorizer: Authorizer<ExampleEntityBo> = EmptyAuthorizer()
+    override val authorizer: Authorizer<ExampleEntityBo> by provider()
 
 }
