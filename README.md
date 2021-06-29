@@ -2,6 +2,8 @@
 
 This repository contains an application template which you may use to start a new application project based on [Zakadabar](https://github.com/spxbhuhb/zakadabar-stack).
 
+**NOTE:** This template uses JDK 14, it doesn't work on lower versions.
+
 ## Create 
 
 1. Create a new repository from this template ([Use this template](https://github.com/spxbhuhb/zakadabar-application-template/generate) button).
