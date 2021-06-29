@@ -33,6 +33,7 @@ class ExampleEntityBo(
     override fun comm() = comm
 
     override fun schema() = BoSchema {
+        + ::id
         + ::name min 1 max 100
     }
 
