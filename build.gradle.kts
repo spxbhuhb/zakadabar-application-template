@@ -70,7 +70,7 @@ repositories {
 }
 
 application {
-    mainClassName = "zakadabar.stack.backend.ServerKt"
+    mainClassName = "zakadabar.core.server.ServerKt"
 }
 
 noArg {
@@ -115,6 +115,10 @@ val syncBuildInfo by tasks.registering(Sync::class) {
             .replace("@stackVersion@", stackVersion)
     }
     into("$projectDir/src/jvmMain/resources")
+}
+
+tasks.named<Copy>("jvmProcessResources") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks["compileKotlinJvm"].dependsOn(syncBuildInfo)
