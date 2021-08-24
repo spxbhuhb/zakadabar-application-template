@@ -4,25 +4,31 @@
 
 package zakadabar.template.backend
 
-import zakadabar.stack.StackRoles
-import zakadabar.stack.backend.BackendModule
-import zakadabar.stack.backend.authorize.SimpleRoleAuthorizerProvider
-import zakadabar.stack.backend.server
-import zakadabar.stack.util.PublicApi
-import zakadabar.template.backend.exampleEntity.ExampleEntityBl
+import zakadabar.core.authorize.AppRolesBase
+import zakadabar.core.authorize.SimpleRoleAuthorizerProvider
+import zakadabar.core.route.RoutedModule
+import zakadabar.core.server.server
+import zakadabar.core.util.PublicApi
+import zakadabar.template.backend.business.ExampleEntityBl
 
 @PublicApi
-object Module : BackendModule {
+object Module : RoutedModule {
 
     override fun onModuleLoad() {
-        zakadabar.lib.accounts.backend.install()
-        zakadabar.lib.i18n.backend.install()
+        zakadabar.lib.accounts.install(MyRoles)
+        zakadabar.lib.i18n.install()
 
         server += SimpleRoleAuthorizerProvider {
-            all = StackRoles.siteMember
+            all = MyRoles.siteMember
+            read = MyRoles.myRole
         }
 
         server += ExampleEntityBl()
     }
 
+}
+
+object MyRoles : AppRolesBase() {
+    val myRole by "my-role"
+    val siteMember by "site-member"
 }

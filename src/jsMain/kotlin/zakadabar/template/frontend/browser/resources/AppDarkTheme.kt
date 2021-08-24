@@ -3,7 +3,7 @@
  */
 package zakadabar.template.frontend.browser.resources
 
-import zakadabar.stack.frontend.builtin.theme.ZkBuiltinDarkTheme
+import zakadabar.core.browser.theme.ZkBuiltinDarkTheme
 
 class AppDarkTheme : ZkBuiltinDarkTheme() {
 

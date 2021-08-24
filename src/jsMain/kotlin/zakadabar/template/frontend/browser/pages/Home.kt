@@ -3,8 +3,8 @@
  */
 package zakadabar.template.frontend.browser.pages
 
-import zakadabar.stack.frontend.builtin.pages.ZkPage
-import zakadabar.stack.frontend.util.plusAssign
+import zakadabar.core.browser.page.ZkPage
+import zakadabar.core.browser.util.plusAssign
 import zakadabar.template.frontend.browser.resources.appStyles
 
 object Home : ZkPage() {

@@ -4,17 +4,17 @@
 package zakadabar.template.frontend.browser
 
 import kotlinx.browser.window
+import zakadabar.core.authorize.appRoles
+import zakadabar.core.browser.sidebar.ZkSideBar
+import zakadabar.core.browser.util.io
+import zakadabar.core.resource.localized
+import zakadabar.lib.accounts.browser.accounts.Account
+import zakadabar.lib.accounts.browser.accounts.AccountSecure
+import zakadabar.lib.accounts.browser.login.Login
+import zakadabar.lib.accounts.browser.roles.Roles
 import zakadabar.lib.accounts.data.LogoutAction
-import zakadabar.lib.accounts.frontend.accounts.Account
-import zakadabar.lib.accounts.frontend.accounts.Accounts
-import zakadabar.lib.accounts.frontend.login.Login
-import zakadabar.lib.accounts.frontend.roles.Roles
-import zakadabar.lib.i18n.frontend.Locales
-import zakadabar.lib.i18n.frontend.Translations
-import zakadabar.stack.StackRoles
-import zakadabar.stack.frontend.application.translate
-import zakadabar.stack.frontend.builtin.sidebar.ZkSideBar
-import zakadabar.stack.frontend.util.io
+import zakadabar.lib.i18n.browser.LocaleCrud
+import zakadabar.lib.i18n.browser.TranslationCrud
 import zakadabar.template.frontend.browser.pages.ExampleEntityCrud
 import zakadabar.template.resources.strings
 
@@ -31,14 +31,14 @@ class SideBar : ZkSideBar() {
             + item<ExampleEntityCrud>()
         }
 
-        withRole(StackRoles.securityOfficer) {
-            + group(translate<Accounts>()) {
-                + item<Accounts>()
+        withRole(appRoles.securityOfficer) {
+            + group(localized<AccountSecure>()) {
+                + item<AccountSecure>()
                 + item<Roles>()
             }
-            + group(translate<Translations>()) {
-                + item<Locales>()
-                + item<Translations>()
+            + group(localized<TranslationCrud>()) {
+                + item<LocaleCrud>()
+                + item<TranslationCrud>()
             }
         }
 

@@ -3,8 +3,8 @@
  */
 package zakadabar.template.frontend.browser.resources
 
-import zakadabar.stack.frontend.resources.css.ZkCssStyleSheet
-import zakadabar.stack.frontend.resources.css.cssStyleSheet
+import zakadabar.core.resource.css.ZkCssStyleSheet
+import zakadabar.core.resource.css.cssStyleSheet
 
 val appStyles by cssStyleSheet(AppStyles())
 

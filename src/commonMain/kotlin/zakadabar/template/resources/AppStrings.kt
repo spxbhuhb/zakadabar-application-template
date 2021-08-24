@@ -5,7 +5,7 @@
 
 package zakadabar.template.resources
 
-import zakadabar.stack.resources.ZkBuiltinStrings
+import zakadabar.core.resource.ZkBuiltinStrings
 
 // This pattern makes it possible to switch the strings easily. Demo can work as
 // a standalone application, but it is possible to use it as a component library.

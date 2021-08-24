@@ -3,9 +3,9 @@
  */
 package zakadabar.template.frontend.browser
 
-import zakadabar.stack.frontend.builtin.layout.ZkDefaultLayout
-import zakadabar.stack.frontend.builtin.titlebar.ZkAppHandle
-import zakadabar.stack.frontend.builtin.titlebar.ZkAppTitleBar
+import zakadabar.core.browser.layout.ZkDefaultLayout
+import zakadabar.core.browser.titlebar.ZkAppHandle
+import zakadabar.core.browser.titlebar.ZkAppTitleBar
 import zakadabar.template.frontend.browser.components.HeaderActions
 import zakadabar.template.frontend.browser.pages.Home
 import zakadabar.template.resources.strings

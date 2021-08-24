@@ -3,11 +3,11 @@
  */
 package zakadabar.template.frontend.browser.pages
 
-import zakadabar.stack.frontend.application.target
-import zakadabar.stack.frontend.application.translate
-import zakadabar.stack.frontend.builtin.crud.ZkCrudTarget
-import zakadabar.stack.frontend.builtin.form.ZkForm
-import zakadabar.stack.frontend.builtin.table.ZkTable
+import zakadabar.core.browser.application.target
+import zakadabar.core.browser.application.translate
+import zakadabar.core.browser.crud.ZkCrudTarget
+import zakadabar.core.browser.form.ZkForm
+import zakadabar.core.browser.table.ZkTable
 import zakadabar.template.data.ExampleEntityBo
 
 
@@ -20,7 +20,7 @@ class ExampleEntityCrud : ZkCrudTarget<ExampleEntityBo>() {
     init {
         companion = ExampleEntityBo.Companion
         boClass = ExampleEntityBo::class
-        pageClass = ExampleEntityForm::class
+        editorClass = ExampleEntityForm::class
         tableClass = ExampleEntityTable::class
     }
 }
