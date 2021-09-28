@@ -257,8 +257,20 @@ abstract class CustomizeTask : DefaultTask() {
 
         mapping["copyright"]?.let { content = content.replace("@copyright@", it) }
 
-        content = content.substringBefore("// ---- ZK-CUSTOMIZE-START -----------------------------------------------------") +
-                content.substringAfter("// ---- ZK-CUSTOMIZE-END -------------------------------------------------------")
+        val start = "// ---- ZK-CUSTOMIZE-START -----------------------------------------------------"
+        val end = "// ---- ZK-CUSTOMIZE-END -------------------------------------------------------"
+
+        val before = content.substringBefore(start)
+        val after = content.substringAfter(end)
+
+        val groupPattern = Regex("""group\s*=\s*.*""")
+        val versionPattern = Regex("""version\s*=\s*.*""")
+
+        val custom = content.substringAfter(start).substringBefore(end).split("\n")
+        val group = custom.first { it.trim().matches(groupPattern) }
+        val version = custom.first { it.trim().matches(versionPattern) }
+
+        content = "$before$group\n$version$after"
 
         Files.write(path, content.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 
