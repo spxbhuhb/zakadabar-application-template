@@ -151,7 +151,8 @@ abstract class CustomizeTask : DefaultTask() {
         map("template/app/etc/stack.server-docker.yaml")
         map("template/docker/Dockerfile")
         map("template/docker/docker-compose.yml")
-        map("build.gradle.kts")
+
+        buildGradleKts()
 
         println("Customisation: done")
     }
@@ -242,6 +243,22 @@ abstract class CustomizeTask : DefaultTask() {
             val value = it.value ?: return@forEach
             content = content.replace("@${it.key}@", value)
         }
+
+        Files.write(path, content.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+
+        println("    map: $path")
+    }
+
+    private fun buildGradleKts() {
+
+        val path = Paths.get(rootDir, "build.gradle.kts")
+
+        var content = Files.readString(path)
+
+        mapping["copyright"]?.let { content = content.replace("@copyright@", it) }
+
+        content = content.substringBefore("// ---- ZK-CUSTOMIZE-START -----------------------------------------------------") +
+                content.substringAfter("// ---- ZK-CUSTOMIZE-END -------------------------------------------------------")
 
         Files.write(path, content.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
 

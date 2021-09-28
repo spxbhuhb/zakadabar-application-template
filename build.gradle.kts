@@ -8,14 +8,14 @@ plugins {
     kotlin("multiplatform") version "1.5.30"
     kotlin("plugin.serialization") version "1.5.30"
     id("org.jetbrains.kotlin.plugin.noarg") version "1.5.30"
-    id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     application
     id("com.palantir.docker") version "0.25.0"
 }
 
+// ---- ZK-CUSTOMIZE-START -----------------------------------------------------
 
 //    ↓ ↓ ↓ ↓   READ COMMENTS  ↓ ↓ ↓ ↓
-
 
 // -----------------------------------------------------------------------------
 // You don't have to modify anything above this
@@ -53,6 +53,8 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 // -----------------------------------------------------------------------------
 // You don't have to modify anything below this
 // -----------------------------------------------------------------------------
+
+// ---- ZK-CUSTOMIZE-END -------------------------------------------------------
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 
@@ -132,7 +134,7 @@ val copyAppStruct by tasks.registering(Copy::class) {
 val copyAppLib by tasks.registering(Copy::class) {
     from("$buildDir/libs")
     into("$distDir/lib")
-    include("${base.archivesBaseName}-${project.version}-all.jar")
+    include("${project.name}-${project.version}-all.jar")
 }
 
 val copyAppIndex by tasks.registering(Copy::class) {
