@@ -4,10 +4,10 @@
 package zakadabar.template.frontend.browser.pages
 
 import zakadabar.core.browser.application.target
-import zakadabar.core.browser.application.translate
 import zakadabar.core.browser.crud.ZkCrudTarget
 import zakadabar.core.browser.form.ZkForm
 import zakadabar.core.browser.table.ZkTable
+import zakadabar.core.resource.localized
 import zakadabar.template.data.ExampleEntityBo
 
 
@@ -34,7 +34,7 @@ class ExampleEntityForm : ZkForm<ExampleEntityBo>() {
     override fun onCreate() {
         super.onCreate()
 
-        build(translate<ExampleEntityForm>()) {
+        build(localized<ExampleEntityForm>()) {
             + section {
                 + bo::name
             }
@@ -53,7 +53,7 @@ class ExampleEntityTable : ZkTable<ExampleEntityBo>() {
 
         crud = target<ExampleEntityCrud>()
 
-        titleText = translate<ExampleEntityTable>()
+        titleText = localized<ExampleEntityTable>()
 
         add = true
         search = true
