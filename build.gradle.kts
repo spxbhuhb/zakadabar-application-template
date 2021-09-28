@@ -2,15 +2,27 @@
  * @copyright@
  */
 
+import zakadabar.gradle.isPublishing
+import zakadabar.gradle.manifestAndDokka
+import zakadabar.gradle.config
 import java.util.*
 
 plugins {
     kotlin("multiplatform") version "1.5.30"
     kotlin("plugin.serialization") version "1.5.30"
     id("org.jetbrains.kotlin.plugin.noarg") version "1.5.30"
+
+    id("org.jetbrains.dokka") version "1.4.32"
+
     id("com.github.johnrengelman.shadow") version "7.0.0"
     application
+
     id("com.palantir.docker") version "0.25.0"
+
+    signing
+    `maven-publish`
+
+    id("zk-build-tasks") apply false
 }
 
 // ---- ZK-CUSTOMIZE-START -----------------------------------------------------
@@ -28,10 +40,21 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
     packageName = "my.pkg.name" // the package your code resides in
 
-    // ---- The following parameters are optional, values show defaults
+    projectPath = null // "spxbhuhb/zakadabar-application-template"
+    projectUrl = null // "https://github.com/$projectPath"
 
-    applicationTitle = "My Application" // the title of your application, this is the title of the web pace
+    license = null // "Apache 2.0"
+    licenseUrl = null // "https://www.apache.org/licenses/LICENSE-2.0.txt"
+
+    organizationName = null // "Simplexion Kft."
+
     copyright = "Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license."
+
+    // the title of your application, this is the title of the web pace
+    // also, if you publish to maven this is the description of your package
+
+    applicationTitle = "My Application"
+
     defaultLocale = "en"
 
     sqlDriver = "org.h2.Driver"
@@ -60,6 +83,9 @@ val isSnapshot = version.toString().contains("SNAPSHOT")
 
 val stackVersion by extra { "2021.9.15" }
 val datetimeVersion = "0.2.1"
+
+// in TeamCity we can use the build number to find the generated docker image
+println("##teamcity[buildNumber '${project.version}']")
 
 repositories {
     mavenCentral()
@@ -101,104 +127,53 @@ kotlin {
     }
 }
 
+// -----------------------------------------------------------------------------
+// Built a fat JAR and server distribution package
+// -----------------------------------------------------------------------------
+
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     // seems like this does not work - minimize()
 }
 
-val syncBuildInfo by tasks.registering(Sync::class) {
-    from("$projectDir/template/zkBuild")
-    inputs.property("version", project.version)
-    filter { line: String ->
-        line.replace("@version@", "${project.version}")
-            .replace("@projectName@", project.name)
-            .replace("@stackVersion@", stackVersion)
-    }
-    into("$projectDir/src/jvmMain/resources")
-}
+apply(plugin = "zk-build-tasks")
 
-tasks.named<Copy>("jvmProcessResources") {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-tasks["compileKotlinJvm"].dependsOn(syncBuildInfo)
-
-val distDir = "$buildDir/app/${project.name}-$version-server"
-
-val copyAppStruct by tasks.registering(Copy::class) {
-    from("$projectDir/template/app")
-    into(distDir)
-    include("**")
-    exclude("**/.gitignore")
-}
-
-val copyAppLib by tasks.registering(Copy::class) {
-    from("$buildDir/libs")
-    into("$distDir/lib")
-    include("${project.name}-${project.version}-all.jar")
-}
-
-val copyAppIndex by tasks.registering(Copy::class) {
-    from("$buildDir/distributions")
-    into("$distDir/var/static")
-    include("index.html")
-    filter { line: String ->
-        line.replace("""src="/${project.name}.js"""", """src="/${project.name}-${project.version}.js"""")
-    }
-}
-
-val copyAppStatic by tasks.registering(Copy::class) {
-    from("$buildDir/distributions")
-    into("$distDir/var/static")
-    include("**")
-
-    exclude("index.html")
-    exclude("*.tar")
-    exclude("*.zip")
-
-    rename("${project.name}.js", "${project.name}-${project.version}.js")
-}
-
-val copyAppUsr by tasks.registering(Copy::class) {
-    from("$projectDir")
-    into("$distDir/usr")
-    include("README.md")
-    include("LICENSE.txt")
-}
-
-val zkBuild by tasks.registering(Zip::class) {
-    group = "zakadabar"
-
-    dependsOn(tasks["build"], copyAppStruct, copyAppLib, copyAppStatic, copyAppIndex, copyAppUsr)
-
-    archiveFileName.set("${project.name}-${project.version}-app.zip")
-    destinationDirectory.set(file("$buildDir/app"))
-
-    from(distDir)
-}
-
-val zkDockerPrepare by tasks.register<zakadabar.gradle.DockerPrepareTask>("zkDockerPrepare") {
-    group = "zakadabar"
-}
-
-val zkDockerCopy by tasks.registering(Copy::class) {
-    from(distDir)
-    into("$buildDir/docker/local/${project.name}")
-    include("**")
-}
+// -----------------------------------------------------------------------------
+// Build a docker image
+// -----------------------------------------------------------------------------
 
 docker {
 
-    dependsOn(zkBuild.get(), zkDockerPrepare, zkDockerCopy.get())
+    dependsOn(tasks["zkBuild"], tasks["zkDockerPrepare"], tasks["zkDockerCopy"])
 
-    name = project.name
-    // this throws unsupported operation exception -- tags.add(version.toString())
+    name = "${project.name}:${project.version}"
 
     pull(true)
     setDockerfile(file("Dockerfile"))
 
+    buildArgs(mapOf(
+        "BUILD_NUMBER" to Date().toString(),
+        "STACK_VERSION" to stackVersion
+    ))
+
+
 }
 
-val zkDocker by tasks.creating(Task::class) {
-    group = "zakadabar"
-    dependsOn(tasks.getByName("docker"))
+// -----------------------------------------------------------------------------
+// Publish artifacts to a Maven repository
+// -----------------------------------------------------------------------------
+
+if (project.isPublishing) {
+
+    manifestAndDokka(tasks)
+
+    signing { config(publishing.publications) }
+
+    publishing {
+        config(project)
+
+        publications.withType<MavenPublication>().all {
+            config(tasks["javadocJar"], "Zakadabar Core")
+        }
+    }
+
 }

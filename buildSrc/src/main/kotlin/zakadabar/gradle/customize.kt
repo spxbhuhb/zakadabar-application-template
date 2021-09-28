@@ -22,6 +22,21 @@ abstract class CustomizeTask : DefaultTask() {
     var projectName: String?
 
     @Input
+    var projectPath : String?
+
+    @Input
+    var projectUrl: String?
+
+    @Input
+    var license : String?
+
+    @Input
+    var licenseUrl : String?
+
+    @Input
+    var organizationName : String?
+
+    @Input
     var packageName: String?
 
     @Input
@@ -72,6 +87,14 @@ abstract class CustomizeTask : DefaultTask() {
         projectName = project.name
         packageName = null
 
+        projectPath = null
+        projectUrl = null
+
+        license = null
+        licenseUrl = null
+
+        organizationName = null
+
         applicationTitle = project.name.capitalize()
 
         defaultLocale = "en"
@@ -116,6 +139,12 @@ abstract class CustomizeTask : DefaultTask() {
         mapping["projectName"] = projectName
         mapping["packageName"] = packageName
 
+        mapping["projectPath"] = projectPath
+        mapping["projectUrl"] = projectUrl
+        mapping["license"] = license
+        mapping["licenseUrl"] = licenseUrl
+        mapping["organizationName"] = organizationName
+
         mapping["applicationTitle"] = applicationTitle
 
         mapping["defaultLocale"] = defaultLocale
@@ -146,6 +175,8 @@ abstract class CustomizeTask : DefaultTask() {
 
         index()
         strings()
+
+        map("buildSrc/src/main/kotlin/zakadabar/gradle/publishing.kt")
 
         map("template/app/etc/stack.server.yaml")
         map("template/app/etc/stack.server-docker.yaml")
