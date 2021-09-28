@@ -10,14 +10,13 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.bundling.Jar
-import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.SigningExtension
 
 val Project.isPublishing
-    get() = project.properties["publish_publish"] != null || System.getenv("PUBLISH_PUBLISH") != null
+    get() = project.properties["zk.publish"] != null || System.getenv("ZK_PUBLISH") != null
 
 fun manifestAndDokka(tasks: TaskContainer): Task {
 
@@ -58,23 +57,27 @@ fun PublishingExtension.config(project: Project) {
 
     repositories {
         maven {
-            name = "${project.properties["publish.snapshot.url"] ?: System.getenv("PUBLISH_SNAPSHOT_URL") ?: "MavenCentral"}"
+            val snapshotUrl =
+                project.properties["zk.publish.snapshot.url"]
+                    ?: System.getenv("ZK_PUBLISH_SNAPSHOT_URL")
+                    ?: "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 
-            url = project.uri(
-                if ("SNAPSHOT" in project.version.toString()) {
-                    project.properties["publish.snapshot.url"]
-                        ?: System.getenv("PUBLISH_SNAPSHOT_URL")
-                        ?: "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                } else {
-                    project.properties["publish.release.url"]
-                        ?: System.getenv("PUBLISH_RELEASE_URL")
-                        ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                }
-            )
+            val releaseUrl =
+                project.properties["zk.publish.release.url"]
+                    ?: System.getenv("ZK_PUBLISH_RELEASE_URL")
+                    ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+
+            if ("SNAPSHOT" in project.version.toString()) {
+                name = if ("s01.oss.sonatype.org" in snapshotUrl.toString()) "MavenCentral" else "Internal"
+                url = project.uri(snapshotUrl)
+            } else {
+                name = if ("s01.oss.sonatype.org" in snapshotUrl.toString()) "MavenCentral" else "Internal"
+                url = project.uri(releaseUrl)
+            }
 
             credentials {
-                username = (project.properties["publish.user"] ?: System.getenv("PUBLISH_USERNAME")).toString()
-                password = (project.properties["publish.password"] ?: System.getenv("PUBLISH_PASSWORD")).toString()
+                username = (project.properties["zk.publish.username"] ?: System.getenv("ZK_PUBLISH_USERNAME")).toString()
+                password = (project.properties["zk.publish.password"] ?: System.getenv("ZK_PUBLISH_PASSWORD")).toString()
             }
         }
     }
