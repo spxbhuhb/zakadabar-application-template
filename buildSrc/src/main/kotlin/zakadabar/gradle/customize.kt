@@ -87,13 +87,13 @@ abstract class CustomizeTask : DefaultTask() {
         projectName = project.name
         packageName = null
 
-        projectPath = null
-        projectUrl = null
+        projectPath = ""
+        projectUrl = ""
 
-        license = null
-        licenseUrl = null
+        license = ""
+        licenseUrl = ""
 
-        organizationName = null
+        organizationName = ""
 
         applicationTitle = project.name.capitalize()
 

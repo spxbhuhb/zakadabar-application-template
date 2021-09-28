@@ -40,13 +40,13 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
     packageName = "my.pkg.name" // the package your code resides in
 
-    projectPath = null // "spxbhuhb/zakadabar-application-template"
-    projectUrl = null // "https://github.com/$projectPath"
+    projectPath = "" // "spxbhuhb/zakadabar-application-template"
+    projectUrl = "" // "https://github.com/$projectPath"
 
-    license = null // "Apache 2.0"
-    licenseUrl = null // "https://www.apache.org/licenses/LICENSE-2.0.txt"
+    license = "" // "Apache 2.0"
+    licenseUrl = "" // "https://www.apache.org/licenses/LICENSE-2.0.txt"
 
-    organizationName = null // "Simplexion Kft."
+    organizationName = "" // "Simplexion Kft."
 
     copyright = "Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license."
 
