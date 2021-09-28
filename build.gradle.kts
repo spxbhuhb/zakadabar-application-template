@@ -5,9 +5,9 @@
 import java.util.*
 
 plugins {
-    kotlin("multiplatform") version "1.5.20"
-    kotlin("plugin.serialization") version "1.5.20"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.5.20"
+    kotlin("multiplatform") version "1.5.30"
+    kotlin("plugin.serialization") version "1.5.30"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.5.30"
     id("com.github.johnrengelman.shadow") version "6.0.0"
     application
     id("com.palantir.docker") version "0.25.0"
@@ -22,7 +22,7 @@ plugins {
 // -----------------------------------------------------------------------------
 
 group = "my.application.group"
-version = "2021.8.24"
+version = "2021.9.28"
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
@@ -56,21 +56,18 @@ tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
 val isSnapshot = version.toString().contains("SNAPSHOT")
 
-val stackVersion by extra { "2021.8.19.1" }
-val datetimeVersion = "0.2.0"
+val stackVersion by extra { "2021.9.15" }
+val datetimeVersion = "0.2.1"
 
 repositories {
     mavenCentral()
-    jcenter()
-    maven(url = "https://kotlin.bintray.com/kotlinx/") // for kotlinx.datetime, to be changed to jcenter()
-
     if (stackVersion.contains("SNAPSHOT")) {
         mavenLocal()
     }
 }
 
 application {
-    mainClassName = "zakadabar.core.server.ServerKt"
+    mainClass.set("zakadabar.core.server.ServerKt")
 }
 
 noArg {
