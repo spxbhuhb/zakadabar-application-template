@@ -68,12 +68,14 @@ fun PublishingExtension.config(project: Project) {
                     ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 
             if ("SNAPSHOT" in project.version.toString()) {
-                name = if ("s01.oss.sonatype.org" in snapshotUrl.toString()) "MavenCentral" else "Internal"
+                name = if ("s01.oss.sonatype.org" in snapshotUrl.toString()) "MavenCentral" else "Private"
                 url = project.uri(snapshotUrl)
             } else {
-                name = if ("s01.oss.sonatype.org" in snapshotUrl.toString()) "MavenCentral" else "Internal"
+                name = if ("s01.oss.sonatype.org" in snapshotUrl.toString()) "MavenCentral" else "Private"
                 url = project.uri(releaseUrl)
             }
+
+            isAllowInsecureProtocol = true
 
             credentials {
                 username = (System.getenv("ZK_PUBLISH_USERNAME") ?: project.properties["zk.publish.username"]).toString()
