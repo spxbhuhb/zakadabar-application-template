@@ -58,13 +58,13 @@ fun PublishingExtension.config(project: Project) {
     repositories {
         maven {
             val snapshotUrl =
-                project.properties["zk.publish.snapshot.url"]
-                    ?: System.getenv("ZK_PUBLISH_SNAPSHOT_URL")
+                System.getenv("ZK_PUBLISH_SNAPSHOT_URL")
+                    ?: project.properties["zk.publish.snapshot.url"]
                     ?: "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 
             val releaseUrl =
-                project.properties["zk.publish.release.url"]
-                    ?: System.getenv("ZK_PUBLISH_RELEASE_URL")
+                System.getenv("ZK_PUBLISH_RELEASE_URL")
+                    ?: project.properties["zk.publish.release.url"]
                     ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 
             if ("SNAPSHOT" in project.version.toString()) {
@@ -76,8 +76,8 @@ fun PublishingExtension.config(project: Project) {
             }
 
             credentials {
-                username = (project.properties["zk.publish.username"] ?: System.getenv("ZK_PUBLISH_USERNAME")).toString()
-                password = (project.properties["zk.publish.password"] ?: System.getenv("ZK_PUBLISH_PASSWORD")).toString()
+                username = (System.getenv("ZK_PUBLISH_USERNAME") ?: project.properties["zk.publish.username"]).toString()
+                password = (System.getenv("ZK_PUBLISH_PASSWORD") ?: project.properties["zk.publish.password"]).toString()
             }
         }
     }

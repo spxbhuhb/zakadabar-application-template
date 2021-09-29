@@ -287,6 +287,7 @@ abstract class CustomizeTask : DefaultTask() {
         var content = Files.readString(path)
 
         mapping["copyright"]?.let { content = content.replace("@copyright@", it) }
+        mapping["applicationTitle"]?.let { content = content.replace("@applicationTitle@", it) }
 
         val start = "// ---- ZK-CUSTOMIZE-START -----------------------------------------------------"
         val end = "// ---- ZK-CUSTOMIZE-END -------------------------------------------------------"

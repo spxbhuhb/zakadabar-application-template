@@ -172,7 +172,7 @@ if (project.isPublishing) {
         config(project)
 
         publications.withType<MavenPublication>().all {
-            config(tasks["javadocJar"], "Zakadabar Core")
+            config(tasks["javadocJar"], "@applicationTitle@")
         }
     }
 
