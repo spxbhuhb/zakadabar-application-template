@@ -8,6 +8,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 import java.util.*
@@ -22,19 +23,19 @@ abstract class CustomizeTask : DefaultTask() {
     var projectName: String?
 
     @Input
-    var projectPath : String?
+    var projectPath: String?
 
     @Input
     var projectUrl: String?
 
     @Input
-    var license : String?
+    var license: String?
 
     @Input
-    var licenseUrl : String?
+    var licenseUrl: String?
 
     @Input
-    var organizationName : String?
+    var organizationName: String?
 
     @Input
     var packageName: String?
@@ -117,6 +118,9 @@ abstract class CustomizeTask : DefaultTask() {
 
     private val packageDir: String
         get() = packageName !!.replace(".", "/")
+
+    fun Path.readString(): String =
+        Files.readAllBytes(this).decodeToString()
 
     @TaskAction
     fun customizeProject() {
@@ -225,7 +229,7 @@ abstract class CustomizeTask : DefaultTask() {
             if (! it.isFile) return@forEach
             if (! it.name.endsWith(".kt")) return@forEach
 
-            val content = Files.readString(it.toPath())
+            val content = it.toPath().readString()
 
             val newContent = content
                 .replace("package zakadabar.template", "package $packageName")
@@ -240,7 +244,7 @@ abstract class CustomizeTask : DefaultTask() {
 
     private fun index() {
         val path = Paths.get(rootDir, "src/jsMain/resources/index.html")
-        val content = Files.readString(path)
+        val content = path.readString()
 
         val newContent = content
             .replace("<title>template</title>", "<title>${applicationTitle}</title>")
@@ -254,7 +258,7 @@ abstract class CustomizeTask : DefaultTask() {
 
     private fun strings() {
         val path = Paths.get(rootDir, "src/commonMain/kotlin/$packageDir/resources/AppStrings.kt")
-        val content = Files.readString(path)
+        val content = path.readString()
 
         val newContent = content
             .replace("by \"template\"", "by \"${applicationTitle}\"")
@@ -268,7 +272,7 @@ abstract class CustomizeTask : DefaultTask() {
 
         val path = Paths.get(rootDir, relPath)
 
-        var content = Files.readString(path)
+        var content = path.readString()
 
         mapping.forEach {
             val value = it.value ?: return@forEach
@@ -284,7 +288,7 @@ abstract class CustomizeTask : DefaultTask() {
 
         val path = Paths.get(rootDir, "build.gradle.kts")
 
-        var content = Files.readString(path)
+        var content = path.readString()
 
         mapping["copyright"]?.let { content = content.replace("@copyright@", it) }
         mapping["applicationTitle"]?.let { content = content.replace("@applicationTitle@", it) }
