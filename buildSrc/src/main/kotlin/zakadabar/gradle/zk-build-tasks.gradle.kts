@@ -113,7 +113,7 @@ abstract class DockerPrepareTask : DefaultTask() {
         val fromPath = Paths.get(rootDir, "template/docker/Dockerfile")
         val toPath = Paths.get(buildDir, "docker/Dockerfile")
 
-        val content = Files.readString(fromPath)
+        val content = Files.readAllBytes(fromPath).decodeToString()
 
         val newContent = content
             .replace("@version@", version)
@@ -125,7 +125,7 @@ abstract class DockerPrepareTask : DefaultTask() {
         val fromPath = Paths.get(rootDir, "template/docker/docker-compose.yml")
         val toPath = Paths.get(buildDir, "app/docker-compose-$version.yml")
 
-        val content = Files.readString(fromPath)
+        val content = Files.readAllBytes(fromPath).decodeToString()
 
         val newContent = content
             .replace("@version@", "/$version")
