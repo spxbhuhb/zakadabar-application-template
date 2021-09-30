@@ -90,6 +90,9 @@ println("##teamcity[buildNumber '${project.version}']")
 repositories {
     mavenCentral()
     if (stackVersion.contains("SNAPSHOT")) {
+        maven {
+            url = project.uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        }
         mavenLocal()
     }
 }

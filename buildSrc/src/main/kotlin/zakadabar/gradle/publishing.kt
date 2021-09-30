@@ -116,7 +116,7 @@ fun MavenPublication.config(source: Any, pomName: String) {
 //                name.set("Tóth István Zoltán")
 //                url.set("https://github.com/toth-istvan-zoltan")
 //                organization.set("@organization@")
-//                organizationUrl.set("@organizationUrl")
+//                organizationUrl.set("@organizationUrl@")
 //            }
 //        }
     }
