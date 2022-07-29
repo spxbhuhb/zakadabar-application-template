@@ -3,9 +3,9 @@
  */
 package zakadabar.template.frontend.browser.resources
 
-import zakadabar.core.browser.theme.ZkBuiltinDarkTheme
+import zakadabar.softui.browser.theme.SuiDarkTheme
 
-class AppDarkTheme : ZkBuiltinDarkTheme() {
+class AppDarkTheme : SuiDarkTheme() {
 
     companion object {
         const val NAME = "app-dark"

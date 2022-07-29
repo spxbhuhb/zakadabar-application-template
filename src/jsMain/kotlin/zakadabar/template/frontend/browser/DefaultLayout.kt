@@ -3,24 +3,14 @@
  */
 package zakadabar.template.frontend.browser
 
-import zakadabar.core.browser.layout.ZkDefaultLayout
-import zakadabar.core.browser.titlebar.ZkAppHandle
-import zakadabar.core.browser.titlebar.ZkAppTitleBar
-import zakadabar.template.frontend.browser.components.HeaderActions
-import zakadabar.template.frontend.browser.pages.Home
-import zakadabar.template.resources.strings
+import zakadabar.softui.browser.layout.SuiDefaultLayout
+import zakadabar.template.frontend.browser.components.AppHeader
 
-object DefaultLayout : ZkDefaultLayout() {
-
+object DefaultLayout : SuiDefaultLayout() {
     override fun onCreate() {
         super.onCreate()
-
-        appHandle = ZkAppHandle(zke { + strings.applicationName }, onIconClick = ::onToggleSideBar, target = Home)
+        header = AppHeader()
         sideBar = SideBar()
-        titleBar = ZkAppTitleBar(::onToggleSideBar)
-
-        titleBar.globalElements += HeaderActions()
-
+        pageTitleContainer.hide()
     }
-
 }

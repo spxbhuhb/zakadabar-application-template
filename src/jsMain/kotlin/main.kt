@@ -18,6 +18,7 @@ fun main() {
 
     zakadabar.lib.accounts.browser.install(application)
     zakadabar.lib.i18n.browser.install(application)
+    zakadabar.softui.browser.install()
 
     io {
 

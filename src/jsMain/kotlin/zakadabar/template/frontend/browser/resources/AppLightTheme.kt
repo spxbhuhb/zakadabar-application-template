@@ -3,9 +3,9 @@
  */
 package zakadabar.template.frontend.browser.resources
 
-import zakadabar.core.browser.theme.ZkBuiltinLightTheme
+import zakadabar.softui.browser.theme.SuiLightTheme
 
-class AppLightTheme : ZkBuiltinLightTheme() {
+class AppLightTheme : SuiLightTheme() {
 
     companion object {
         const val NAME = "app-light"

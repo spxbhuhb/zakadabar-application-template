@@ -20,12 +20,12 @@ class AppStrings : ZkBuiltinStrings() {
 
     // these will most likely change a bit with the first release of July 2021
 
-    val accountName by "Account Name"
-    val email by "E-mail"
-    val phone by "Phone"
-    val locked by "Locked"
-    val lastLoginSuccess by "Last Login Success"
-    val lastLoginFail by "Last Login Fail"
+    override val accountName by "Account Name"
+    override val email by "E-mail"
+    override val phone by "Phone"
+    override val locked by "Locked"
+    override val lastLoginSuccess by "Last Login Success"
+    override val lastLoginFail by "Last Login Fail"
     val description by "Description"
     override val loginFailCount by "Login Fail Count"
 }
