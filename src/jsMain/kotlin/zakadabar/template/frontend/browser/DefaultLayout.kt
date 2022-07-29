@@ -11,6 +11,5 @@ object DefaultLayout : SuiDefaultLayout() {
         super.onCreate()
         header = AppHeader()
         sideBar = SideBar()
-        pageTitleContainer.hide()
     }
 }

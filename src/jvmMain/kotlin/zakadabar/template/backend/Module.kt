@@ -6,6 +6,7 @@ package zakadabar.template.backend
 
 import zakadabar.core.authorize.AppRolesBase
 import zakadabar.core.authorize.SimpleRoleAuthorizerProvider
+import zakadabar.core.module.modules
 import zakadabar.core.route.RoutedModule
 import zakadabar.core.server.server
 import zakadabar.core.util.PublicApi
@@ -18,12 +19,12 @@ object Module : RoutedModule {
         zakadabar.lib.accounts.install(MyRoles)
         zakadabar.lib.i18n.install()
 
-        server += SimpleRoleAuthorizerProvider {
-            all = MyRoles.siteMember
-            read = MyRoles.myRole
+        modules += SimpleRoleAuthorizerProvider {
+            all = LOGGED_IN
+            delete = MyRoles.myRole
         }
 
-        server += ExampleEntityBl()
+        modules += ExampleEntityBl()
     }
 
 }
