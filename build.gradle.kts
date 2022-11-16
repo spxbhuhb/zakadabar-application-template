@@ -16,9 +16,9 @@ plugins {
     signing
     `maven-publish`
 
-    id("com.palantir.docker") version "0.25.0"
-    id("org.jetbrains.dokka") version "1.4.32"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.palantir.docker") version "0.33.0"
+    id("org.jetbrains.dokka") version "1.6.20"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("zk-build-tasks") apply false
 }
 
