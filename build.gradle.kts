@@ -8,20 +8,17 @@ import zakadabar.gradle.config
 import java.util.*
 
 plugins {
-    kotlin("multiplatform") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.7.10"
+    kotlin("multiplatform") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("plugin.noarg") version "1.7.20"
 
-    id("org.jetbrains.dokka") version "1.4.32"
-
-    id("com.github.johnrengelman.shadow") version "7.0.0"
     application
-
-    id("com.palantir.docker") version "0.25.0"
-
     signing
     `maven-publish`
 
+    id("com.palantir.docker") version "0.25.0"
+    id("org.jetbrains.dokka") version "1.4.32"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     id("zk-build-tasks") apply false
 }
 
@@ -107,15 +104,18 @@ noArg {
 
 kotlin {
 
+    jvmToolchain(11)
+
     jvm {
         withJava()
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
     }
 
     js {
-        browser()
+        browser{
+            testTask {
+                enabled = ! isPublishing
+            }
+        }
     }
 
     sourceSets["commonMain"].dependencies {
@@ -135,8 +135,11 @@ kotlin {
 // Built a fat JAR and server distribution package
 // -----------------------------------------------------------------------------
 
-tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
-    // seems like this does not work - minimize()
+tasks {
+    shadowJar {
+        mergeServiceFiles()
+        //  minimize() // do not use minimize!!!
+    }
 }
 
 apply(plugin = "zk-build-tasks")

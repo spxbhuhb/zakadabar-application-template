@@ -1,5 +1,8 @@
+import zakadabar.gradle.brotli
+import zakadabar.gradle.gzip
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
 
 /*
@@ -24,6 +27,7 @@ val syncBuildInfo by tasks.registering(Copy::class) {
 
 tasks.named<Copy>("jvmProcessResources") {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    dependsOn(syncBuildInfo)
 }
 
 tasks["compileKotlinJvm"].dependsOn(syncBuildInfo)
@@ -50,6 +54,7 @@ val copyAppLib by tasks.registering(Copy::class) {
     from("$buildDir/libs")
     into("$distDir/lib")
     include("${project.name}-${project.version}-all.jar")
+    dependsOn(tasks["shadowJar"])
 }
 
 val copyAppIndex by tasks.registering(Copy::class) {
@@ -59,6 +64,7 @@ val copyAppIndex by tasks.registering(Copy::class) {
     filter { line: String ->
         line.replace("""src="/${project.name}.js"""", """src="/${project.name}-${project.version}.js"""")
     }
+    dependsOn(tasks["jsBrowserDistributeResources"])
 }
 
 val copyAppStatic by tasks.registering(Copy::class) {
@@ -84,7 +90,7 @@ val copyAppUsr by tasks.registering(Copy::class) {
 val zkBuild by tasks.registering(Zip::class) {
     group = "zakadabar"
 
-    dependsOn(tasks["shadowJar"], copyAppStruct, copyAppLib, copyAppStatic, copyAppIndex, copyAppUsr)
+    dependsOn(tasks["build"], copyAppStruct, copyAppLib, copyAppStatic, copyAppIndex, copyAppUsr, precompressStatic)
 
     archiveFileName.set("${project.name}-${project.version}-server.zip")
     destinationDirectory.set(file("$buildDir/app"))
@@ -141,6 +147,7 @@ val zkDockerPrepare by tasks.register<DockerPrepareTask>("zkDockerPrepare") {
 }
 
 val zkDockerCopy by tasks.registering(Copy::class) {
+    dependsOn(zkBuild)
     from("$buildDir/app/${project.name}-$version-server")
     into("$buildDir/docker/local/${project.name}")
     include("**")
@@ -149,4 +156,30 @@ val zkDockerCopy by tasks.registering(Copy::class) {
 val zkDocker by tasks.creating(Task::class) {
     group = "zakadabar"
     dependsOn(tasks.getByName("docker"))
+}
+
+val precompressStatic by tasks.registering(Task::class) {
+    dependsOn(copyAppStatic, copyAppIndex)
+
+    doFirst {
+        val srcDir = Paths.get("$distDir/var/static")
+        val dstDir = Paths.get("$distDir/var/static/precompressed")
+
+        fileTree(srcDir).apply {
+            include("**/*.js", "**/*.js.map", "**/*.html")
+            exclude("precompressed", "index.html")
+        }.map(File::toPath).map(srcDir::relativize).forEach {
+
+            val src = srcDir.resolve(it)
+            val dst = dstDir.resolve(it)
+
+            mkdir(dst.parent)
+
+            gzip(src, Paths.get("$dst.gz"))
+            brotli(src, Paths.get("$dst.br"))
+
+            Files.move(src, dst, StandardCopyOption.REPLACE_EXISTING)
+
+        }
+    }
 }
