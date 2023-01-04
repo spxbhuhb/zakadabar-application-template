@@ -64,7 +64,7 @@ val copyAppIndex by tasks.registering(Copy::class) {
     filter { line: String ->
         line.replace("""src="/${project.name}.js"""", """src="/${project.name}-${project.version}.js"""")
     }
-    dependsOn(tasks["jsBrowserDistributeResources"])
+    dependsOn(tasks["jsBrowserProductionExecutableDistributeResources"])
 }
 
 val copyAppStatic by tasks.registering(Copy::class) {
@@ -77,7 +77,7 @@ val copyAppStatic by tasks.registering(Copy::class) {
     exclude("*.zip")
 
     rename("${project.name}.js", "${project.name}-${project.version}.js")
-    dependsOn(tasks["jsBrowserProductionWebpack"], tasks["jsBrowserDistributeResources"])
+    dependsOn(tasks["jsBrowserProductionWebpack"], tasks["jsBrowserProductionExecutableDistributeResources"])
 }
 
 val copyAppUsr by tasks.registering(Copy::class) {

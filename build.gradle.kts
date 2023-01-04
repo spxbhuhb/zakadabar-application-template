@@ -8,9 +8,9 @@ import zakadabar.gradle.config
 import java.util.*
 
 plugins {
-    kotlin("multiplatform") version "1.7.20"
-    kotlin("plugin.serialization") version "1.7.20"
-    kotlin("plugin.noarg") version "1.7.20"
+    kotlin("multiplatform") version "1.8.0"
+    kotlin("plugin.serialization") version "1.8.0"
+    kotlin("plugin.noarg") version "1.8.0"
 
     application
     signing
@@ -31,7 +31,7 @@ plugins {
 // -----------------------------------------------------------------------------
 
 group = "my.application.group"
-version = "2022.6.20"
+version = "2023.1.1"
 
 tasks.register<zakadabar.gradle.CustomizeTask>("zkCustomize") {
 
@@ -110,12 +110,13 @@ kotlin {
         withJava()
     }
 
-    js {
+    js(IR) {
         browser{
             testTask {
                 enabled = ! isPublishing
             }
         }
+        binaries.executable()
     }
 
     sourceSets["commonMain"].dependencies {

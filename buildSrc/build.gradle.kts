@@ -10,7 +10,7 @@ repositories {
     mavenCentral()
 }
 
-val brotliVersion = "1.7.1"
+val brotliVersion = "1.9.0"
 
 kotlin {
     dependencies {
